@@ -1,8 +1,11 @@
 package com.comic.springbootproject.user.dao;
 
+import com.comic.springbootproject.common.vo.Search;
 import com.comic.springbootproject.user.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @Mapper
@@ -22,6 +25,28 @@ public interface UserDao {
     void deleteUser(int id);
     @Select("select * from user_table where id = #{id}")
     User getUserById(int id);
+    @Select("select * from user_table where userName=#{userName} and password=#{password} limit 1")
+    User login(@Param("userName") String userName,@Param("password") String password);
+    @Update("update user_table set isAdmin = 1 where id = #{id}")
+    void setAdmin(int id);
+    @Select("<script>"
+            + "select * from user_table"
+            +"<where>"
+            +"<if test= 'keyword != \"\" and keyword != null ' >"
+            + " and (userName like '%${keyword}%' or email like '%${keyword}%' or " +
+            "phone like '%${keyword}%')"
+            +"</if>"
+            +"</where>"
+            +"<choose>"
+            +"<when test='sort != \"\" and sort != null '>"
+            +" order by ${sort} ${direction}"
+            +"</when>"
+            +"<otherwise>"
+            +" order by id asc"
+            +"</otherwise>"
+            +"</choose>"
+            +"</script>")
+    List<User> getUserBySearch(Search search);
 }
 
 

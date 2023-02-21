@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -47,9 +48,10 @@ public class ImageServiceImpl implements ImageService {
             pathFile1.mkdirs();
         }
         //获取文件名
-        String fileName = String.format("%s.%s", System.currentTimeMillis(),
-                FileUtil.getFileType(mf.getOriginalFilename()));
-
+       // String fileName = String.format("%s.%s", System.currentTimeMillis(),
+        //       FileUtil.getFileType(mf.getOriginalFilename()));
+        //
+        String fileName = new Date().getTime()+"_"+mf.getOriginalFilename();
         //文件写入路径
         String transferPath = realPath+"/"+fileName;
 

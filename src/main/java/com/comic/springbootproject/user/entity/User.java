@@ -1,10 +1,11 @@
 package com.comic.springbootproject.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 public class User {
@@ -16,12 +17,14 @@ public class User {
     private String avatar;
     private String email;
     private String phone;
-    private long createTime;
+    private String createTime;
+
+    private int isAdmin;
 
     public User() {
     }
 
-    public User(int id, String userName, String password, String avatar, String email, String phone, long createTime) {
+    public User(int id, String userName, String password,int isAdmin, String avatar, String email, String phone, String createTime) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -29,5 +32,6 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.createTime = createTime;
+        this.isAdmin = isAdmin;
     }
 }

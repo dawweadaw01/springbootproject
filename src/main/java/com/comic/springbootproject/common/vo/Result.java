@@ -15,6 +15,9 @@ public class Result<T> {
     public static <T> Result <T> ok(T data) {
         return new Result(ResultCode.SUCCESS.code, "success", data);
     }
+    public static <T> Result <T> ok(String message,T data) {
+        return new Result(ResultCode.SUCCESS.code, message, data);
+    }
 
     public static <T> Result <T> failed(String message, T data) {
         return new Result(ResultCode.FAILED.code, message, data);
