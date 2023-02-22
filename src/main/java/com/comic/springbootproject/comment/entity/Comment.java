@@ -1,7 +1,7 @@
 package com.comic.springbootproject.comment.entity;
 
 
-import com.comic.comicsystem.common.entity.AbstractEntity;
+import com.comic.springbootproject.common.entiy.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

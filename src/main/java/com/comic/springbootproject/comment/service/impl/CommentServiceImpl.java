@@ -1,9 +1,9 @@
 package com.comic.springbootproject.comment.service.impl;
 
 
-import com.comic.comicsystem.comment.dao.CommentDao;
-import com.comic.comicsystem.comment.entity.Comment;
-import com.comic.comicsystem.common.vo.Result;
+import com.comic.springbootproject.comment.dao.CommentDao;
+import com.comic.springbootproject.comment.entity.Comment;
+import com.comic.springbootproject.common.vo.Result;
 import com.comic.springbootproject.comment.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,8 @@ public class CommentServiceImpl implements CommentService {
         comment.setComicId(comment.getComicId());
         comment.setOtherId(comment.getOtherId());
         comment.setComment(comment.getComment());
-        comment.setCreateDate(LocalDateTime.now());
-        comment.setCreateDate(LocalDateTime.now());
+        comment.setCreateTime(LocalDateTime.now());
+        comment.setUpdateTime(LocalDateTime.now());
 
         // insert
         commentDao.insertComment(comment);

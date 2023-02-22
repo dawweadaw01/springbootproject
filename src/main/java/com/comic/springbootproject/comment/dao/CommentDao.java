@@ -1,7 +1,7 @@
 package com.comic.springbootproject.comment.dao;
 
 
-import com.comic.comicsystem.comment.entity.Comment;
+import com.comic.springbootproject.comment.entity.Comment;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;

@@ -1,7 +1,7 @@
 package com.comic.springbootproject.comment.service;
 
-import com.comic.comicsystem.comment.entity.Comment;
-import com.comic.comicsystem.common.vo.Result;
+import com.comic.springbootproject.comment.entity.Comment;
+import com.comic.springbootproject.common.vo.Result;
 
 public interface CommentService {
 

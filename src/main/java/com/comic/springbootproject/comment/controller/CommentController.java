@@ -1,9 +1,9 @@
 package com.comic.springbootproject.comment.controller;
 
 
-import com.comic.comicsystem.comment.entity.Comment;
-import com.comic.comicsystem.comment.service.impl.CommentService;
-import com.comic.comicsystem.common.vo.Result;
+import com.comic.springbootproject.comment.entity.Comment;
+import com.comic.springbootproject.comment.service.CommentService;
+import com.comic.springbootproject.common.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
