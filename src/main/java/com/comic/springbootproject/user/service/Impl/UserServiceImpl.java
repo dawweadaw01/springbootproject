@@ -16,6 +16,7 @@ import java.beans.Transient;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,10 +30,10 @@ public class UserServiceImpl implements UserService {
         //  根据用户名字查找用户是否存在
         User temp = userDao.getUserByName(user.getUserName());
         //  如果存在返回错误信息
-        if(temp != null) {
+        if (temp != null) {
             return Result.failed("用户名已存在");
         }
-        String time = new Date().getTime()+"";
+        String time = new Date().getTime() + "";
         //初始化user属性
         user.setCreateTime(time);
         user.setPassword(MD5Util.getMD5(user.getPassword()));
@@ -44,15 +45,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Result<User> updateUser(User user) {
         User temp = userDao.getUserByName(user.getUserName());
+        User temp2 = userDao.getUserById(user.getId());
         //  如果存在返回错误信息
-        if(temp != null && temp.getId() != user.getId()) {
+        if (temp != null && temp.getId() != user.getId()) {
             return Result.failed("用户名已存在");
         }
-        String time = new Date().getTime()+"";
+        String time = new Date().getTime() + "";
         //初始化user属性
         user.setCreateTime(time);
-        user.setPassword(MD5Util.getMD5(user.getPassword()));
-        userDao.updateUser(user);
+        if (Objects.equals(user.getPassword(),temp2.getPassword())) {
+            userDao.updateUserExpPassword(user);
+        }else {
+            user.setPassword(MD5Util.getMD5(user.getPassword()));
+            userDao.updateUser(user);
+        }
         return Result.ok(user);
     }
 
@@ -67,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User getUserById(int id) {
         SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        User user=  userDao.getUserById(id);
+        User user = userDao.getUserById(id);
         Long time = Long.parseLong(user.getCreateTime());
         user.setCreateTime(sdfDatetime.format(time));
         return user;
@@ -77,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Result<User> login(User user) {
         User temp = userDao.login(user.getUserName(), MD5Util.getMD5(user.getPassword()));
-        if(temp != null) {
+        if (temp != null) {
             return Result.ok(temp);
         }
         return Result.failed("用户名或密码错误");
@@ -87,19 +93,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Result<User> setAdmin(int id) {
         User temp = userDao.getUserById(id);
-        if(temp.getIsAdmin() == 1) {
+        if (temp.getIsAdmin() == 1) {
             return Result.failed("该用户已经是管理员");
         }
         userDao.setAdmin(id);
         temp.setIsAdmin(1);
         return Result.ok(temp);
     }
+
     @Override
     @Transactional
-    public PageInfo<User> getUserBySearch (Search search) {
+    public PageInfo<User> getUserBySearch(Search search) {
 
         search.initSearch();
-        PageHelper.startPage(search.getCurrentPage(),search.getPageSize());
+        PageHelper.startPage(search.getCurrentPage(), search.getPageSize());
         return new PageInfo<>(Optional.ofNullable
                 (userDao.getUserBySearch(search)).orElse(Collections.emptyList()));
     }

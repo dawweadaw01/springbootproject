@@ -1,5 +1,8 @@
 package com.comic.springbootproject.user.service.Impl;
 
+import ch.qos.logback.core.BasicStatusManager;
+import com.comic.springbootproject.comic.entity.Comic;
+import com.comic.springbootproject.comic.service.ComicService;
 import com.comic.springbootproject.common.vo.Result;
 import com.comic.springbootproject.user.dao.UserRecord;
 import com.comic.springbootproject.user.entity.UserCollection;
@@ -8,6 +11,7 @@ import com.comic.springbootproject.user.service.UserRecordService;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +19,8 @@ import java.util.List;
 public class UserRecordServiceImpl implements UserRecordService {
     @Resource
     private UserRecord userRecord;
+    @Resource
+    private ComicService comicService;
 
     @Override
     @Transactional
@@ -30,28 +36,29 @@ public class UserRecordServiceImpl implements UserRecordService {
 
     @Override
     @Transactional
-    public Result<Object> selectComicByHistory(int id) {
+    public Result<Object> selectHistoryByUserId(int id) {
         List<Integer> list = userRecord.selectHistoryByUserId(id);
-        // TODO : 设置List<Comic> comicHistory = new ArrayList<>();
-        // TODO : for(int i = 0; i < list.size(); i++){
-        // TODO :     comicList.add(comicService.'得到动漫的函数'(list.get(i)));
-        // TODO : }
-        // TODO : return Result.ok(comicHistory);
-        //等待动漫id的查询
-        return null;
+        List<Comic> comicHistory = new ArrayList<>();
+        for (Integer integer : list) {
+            Comic comic = comicService.getComicById(integer);
+            comicHistory.add(comic);
+        }
+        if(comicHistory.size() == 0){
+            return Result.failed("没有历史记录");
+        }
+        return Result.ok("查找成功",comicHistory);
 
     }
 
     @Override
     @Transactional
-    public Result<Object> selectComicByCollection(int id) {
+    public Result<Object> selectCollectionByUserId(int id) {
         List<Integer> list = userRecord.selectCollectionByUserId(id);
-        // TODO : 设置List<Comic> comicCollection = new ArrayList<>();
-        // TODO : for(int i = 0; i < list.size(); i++){
-        // TODO :     comicList.add(comicService.'得到动漫的函数'(list.get(i)));
-        // TODO : }
-        // TODO : return Result.ok(comicCollection);
-        return null;
+         List<Comic> comicCollection = new ArrayList<>();
+        for (Integer integer : list) {
+            comicCollection.add(comicService.getComicById(integer));
+        }
+         return Result.ok(comicCollection);
     }
 
     @Override

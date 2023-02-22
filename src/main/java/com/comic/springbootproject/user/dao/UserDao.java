@@ -21,6 +21,10 @@ public interface UserDao {
             "avatar=#{avatar}, email=#{email}, phone=#{phone}, createTime = #{createTime} where id = #{id}")
     void updateUser(User user);
 
+    @Update("update user_table set userName = #{userName}," +
+            "avatar=#{avatar}, email=#{email}, phone=#{phone}, createTime = #{createTime} where id = #{id}")
+    void updateUserExpPassword(User user);
+
     @Delete("delete from user_table where id = #{id}")
     void deleteUser(int id);
     @Select("select * from user_table where id = #{id}")

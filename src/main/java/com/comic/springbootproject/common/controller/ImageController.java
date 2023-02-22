@@ -18,7 +18,7 @@ public class ImageController {
 
     /**
      * 127.0.0.1/api/common/image/PROFILE  --- post
-     *
+     *  return image url
      */
     @PostMapping(value = "/image/{imageTypeName}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Result<String> uploadImage(@RequestParam MultipartFile file,

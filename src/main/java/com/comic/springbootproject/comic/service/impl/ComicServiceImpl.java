@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Service
 public class ComicServiceImpl implements ComicService {
 
-    @Autowired
+    @Resource
     private ComicDao comicDao;
 
     //实现动漫添加
@@ -67,12 +68,6 @@ public class ComicServiceImpl implements ComicService {
     @Override
     public Comic getComicById(int id) {
         return comicDao.getComicById(id);
-    }
-
-    //模糊查询
-    @Override
-    public List<Comic> getComicListLikeSearch(String keyword) {
-        return comicDao.getComicLikeSearch(keyword);
     }
 
     //分页查询

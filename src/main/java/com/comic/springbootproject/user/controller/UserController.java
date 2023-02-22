@@ -102,15 +102,25 @@ public class UserController {
         return userRecordService.insertHistory(userHistory);
     }
 
-//    /**
-//     * URL: <a href="http://localhost/user/selectHistoryByUserId/{id}">...</a> ----get
-//     * @param id:用户id
-//     * @return 返回用户浏览记录
-//     */
-//    @GetMapping(value = "/selectHistoryByUserId/{id}")
-//    public Result<Object> selectHistoryByUserId(@PathVariable("id") int id) {
-//        return userRecordService.selectHistoryByUserId(id);
-//    }
+    /**
+     * URL: <a href="http://localhost/user/selectHistoryByUserId/{id}">...</a> ----get
+     * @param id:用户id
+     * @return 返回用户浏览记录
+     */
+    @GetMapping(value = "/selectHistoryByUserId/{id}")
+    public Result<Object> selectHistoryByUserId(@PathVariable("id") int id) {
+        return userRecordService.selectHistoryByUserId(id);
+    }
+
+    /**
+     * URL: <a href="http://localhost/user/selectCollectionByUserId/{id}">...</a> ----get
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/selectCollectionByUserId/{id}")
+    public Result<Object> selectCollectionByUserId(@PathVariable("id") int id) {
+        return userRecordService.selectCollectionByUserId(id);
+    }
 
     /**
      * URL: <a href="http://localhost/user/deleteCollection">...</a> ----delete

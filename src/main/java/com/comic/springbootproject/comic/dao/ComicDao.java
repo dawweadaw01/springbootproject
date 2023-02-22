@@ -13,8 +13,11 @@ import java.util.List;
 public interface ComicDao {
 
     //增  ——传入对象
-    @Insert("INSERT INTO comic_table(comicName,nickName,author,region,year,releaseTime,description,cover,popularity)" +
-            "VALUES (#{comicName},#{nickName},#{author},#{region},#{year},#{releaseTime},#{description},#{cover},#{popularity})")
+    @Insert("INSERT INTO comic_table(comicName, nickName, cover, region,label," +
+            " year,remark,updateTime, description, number, popularity,url) " +
+            "VALUES(#{comicName}, #{nickName}, #{cover}, #{region},#{label}, " +
+            "#{year},#{remark}, #{updateTime}, #{description}, #{number}, " +
+            "#{popularity},#{url})")
     void insertComic(Comic comic);
 
     //根据名字查  ——传入属性——名
@@ -26,9 +29,10 @@ public interface ComicDao {
     Comic getComicById(int id);
 
     //更新  ——传入对象
-    @Update("UPDATE comic_table SET comicName = #{comicName}, nikeName = #{nickName}, author = #{author}," +
-            "region = #{region}, year = #{year}, releaseTime = #{releaseTime}, description=#{description}," +
-            "cover = #{cover}, popularity = #{popularity}")
+    @Update("UPDATE comic_table SET comicName=#{comicName}, nickName=#{nickName}, cover=#{cover}, " +
+            "region=#{region},label=#{label}, year=#{year},remark=#{remark}," +
+            "updateTime=#{updateTime}, description=#{description}, number=#{number}," +
+            " popularity=#{popularity},url=#{url} WHERE id=#{id}")
     void updateComic(Comic comic);
 
     //删除
@@ -36,19 +40,13 @@ public interface ComicDao {
     void deleteComicById(int id);
 
     //按照地域查照
-    @Select("SELECT * FROM comic_table WHERE region = concat('%',#{region},'%')")
-    List<Comic> getComicByRegion(String region);
 
-    //模糊查询
-    @Select("SELECT * FROM comic_table WHERE comicName like concat('%',#{keyword},'%') or nickName like concat('%',#{keyword},'%') or author like concat('%',#{keyword},'%')")
-    //@Select("SELECT * FROM account_user WHERE comicName like keyword or nickName like keyword or author like keyword")
-    List<Comic> getComicLikeSearch(String keyword);
 
     @Select("<script>"
             + "select * from comic_table "
             + "<where> "
             + "<if test='keyword != \"\" and keyword != null'>"
-            + " and (comicName like '%${keyword}%' or nickName like '%${keyword}%') "
+            + " and (comicName like '%${keyword}%' or nickName like '%${keyword}%'or region like '%${keyword}%'or label like '%${keyword}%') "
             + "</if>"
             + "</where>"
             + "<choose>"
@@ -56,7 +54,7 @@ public interface ComicDao {
             + " order by ${sort} ${direction}"
             + "</when>"
             + "<otherwise>"
-            + " order by id desc"
+            + " order by popularity desc"
             + "</otherwise>"
             + "</choose>"
             + "</script>")

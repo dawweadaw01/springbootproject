@@ -8,10 +8,8 @@ import java.util.List;
 
 public interface UserRecordService {
     Result<Object> insertHistory(UserHistory userHistory);
-    // TODO : 根据用户id查找历史记录
-    Result<Object> selectComicByHistory(int id);
-    // TODO : 根据用户id查找收藏记录
-    Result<Object> selectComicByCollection(int id);
+    Result<Object> selectHistoryByUserId(int id);
+    Result<Object> selectCollectionByUserId(int id);
     Result<UserCollection> insertCollection(UserCollection userCollection);
 
     Result<Object> deleteCollection(UserCollection userCollection);

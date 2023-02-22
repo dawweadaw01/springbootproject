@@ -18,7 +18,5 @@ public interface ComicService {
 
     Comic getComicById(int id);
 
-    List<Comic> getComicListLikeSearch(String keyword);
-
     PageInfo<Comic> getComicListBySearch(Search search);
 }
