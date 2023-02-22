@@ -37,6 +37,7 @@ public class UserRecordServiceImpl implements UserRecordService {
         // TODO :     comicList.add(comicService.'得到动漫的函数'(list.get(i)));
         // TODO : }
         // TODO : return Result.ok(comicHistory);
+        //等待动漫id的查询
         return null;
 
     }
