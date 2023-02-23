@@ -141,6 +141,7 @@ button:active {
 
 
 .zongti{
+  margin-top: 20%;
     position: relative;
     width: 768px;
     max-width: 100%;
