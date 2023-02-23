@@ -10,8 +10,6 @@ import com.comic.springbootproject.comment.service.CommentReplyContentService;
 import com.comic.springbootproject.common.vo.Result;
 import com.comic.springbootproject.user.dao.UserDao;
 import com.comic.springbootproject.user.entity.User;
-import com.comic.springbootproject.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -1,15 +1,12 @@
 package com.comic.springbootproject.comic.controller;
 
-
 import com.comic.springbootproject.comic.entity.Comic;
 import com.comic.springbootproject.comic.service.ComicService;
 import com.comic.springbootproject.common.vo.Result;
 import com.comic.springbootproject.common.vo.Search;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 
 @RestController
@@ -33,7 +30,7 @@ public class ComicController {
      *             year:"2002",
      *             updateTime:"2019-12-12",
      *             number:700}
-     * @return
+     * @return 返回的comic
      */
     @PostMapping(value = "/insert", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Result<Comic> insertComic(@RequestBody Comic comic) {
