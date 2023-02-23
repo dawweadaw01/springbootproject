@@ -13,20 +13,21 @@
 <div class="left" v-if="id=='1'">
     
         <h1>sign up</h1>
-        <input type="text" name="userName" id="userName" placeholder="userName...">
-        <input type="email" name="email" id="email" placeholder="Email...">
-        <input type="password" name="password" id="password" placeholder="Password...">
-        <button class="tebie">sign up</button>
+        <input type="text"  v-model="user.userName" placeholder="userName...">
+        <input type="email"  v-model="user.email" placeholder="Email...">
+        <input type="password"  v-model="user.password" placeholder="Password...">
+        <input type="text"  v-model="user.phone" placeholder="Phone...">
+        <el-button :plain="true" class="tebie" @click="regist()">sign up</el-button>
     
 </div>
 <!-- 登录页面 -->
-<div class="left">
+<div class="left" v-if="id=='0'">
     
         <h1>sign in</h1>
-        <input type="email" name="email" id="email" placeholder="Email..." >
-        <input type="password" name="password" id="password" placeholder="Password...">
-        <el-button type="text" @click="open" class="forget">forget your password</el-button>
-        <button class="tebie">sign up</button>
+        <input type="text"  v-model="user.userName" placeholder="userName...">
+        <input type="password"  v-model="user.password" placeholder="Password...">
+        <button :plain="true" type="text" @click="open" class="forget">forget your password</button>
+        <el-button :plain="true" class="tebie" @click="login()">sign in</el-button>
     
 </div>
     <div class="right" v-if="id=='0'">
@@ -35,7 +36,7 @@
             <p>
                 Enter your personal details and start journey with us
             </p>
-            <button class="ghost" @click="toregist()">sign up</button>
+            <el-button :plain="true" class="ghost" @click="toregist()">sign up</el-button>
         </div>
     </div>
     <div class="right" v-if="id=='1'">
@@ -44,7 +45,7 @@
             <p>
               o keep connected with us please login with your personal info
             </p>
-            <button class="ghost" @click="tologin()">sign in</button>
+            <el-button :plain="true" class="ghost" @click="tologin()">sign in</el-button>
         </div>
     </div>
 </div>
@@ -58,7 +59,13 @@
     data(){
 			return {
 				id:0,
-
+        user:{
+          userName:'',
+          email:'',
+          password:'',
+          phone:''
+        }
+      
 			}
 		},
     methods: {
@@ -80,8 +87,48 @@
       this.$data.id=1;
      },
       login: function(){
-        this.$VuexStore.commit("setToken", "this.data.ok");
+        this.$Request
+            .fetch_("/user/login","post",this.user)
+            .then((result)=>{
+              console.log(result)
+              if(result.code==200){
+                this.$message('登录成功'),
+                this.$VuexStore.commit("setToken", result.data);
 							this.$router.push("/");
+              }else{
+                this.$message('账号密码错误'),
+                this.user.userName='',
+                this.user.password=''
+              }
+              
+            })
+            .catch(() => {});
+						
+      },
+      regist:function(){
+        console.log(this.user.userName)
+        if(this.user.userName==''){
+          this.$message('没有输入完')
+        }else{
+          this.$Request
+            .fetch_("/user/insertUser","post",this.user)
+            .then((result)=>{
+              console.log(result)
+              if(result.code==200){
+                this.$message('注册成功')
+                this.id=0
+              }else{
+                this.$message('注册失败')
+                this.user.userName='',
+                this.user.password='',
+                this.user.email='',
+                this.user.phone=''
+              }
+            })
+            .catch(() => {});
+        }
+
+        
       }
     }
   }
@@ -89,6 +136,19 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style>
+  .tebie{
+    width: 200px;
+    margin-top: 10px;
+    outline: none;
+    border: 1px solid #83cdf8;
+    border-radius: 20px;
+    background-color: #36a4ff;
+    padding: 10px 40px;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: white;
+    transition: transform 85ms ease-in;
+  }
  .forget{
   font-size: 10px;
   margin-top: 20px;
@@ -108,6 +168,11 @@
     height: 20px;
    
   }
+  button{
+    cursor: pointer;
+    background-color: unset;
+   border: 0;
+  }
 body{
     display: flex;
     justify-content: center;
@@ -115,7 +180,7 @@ body{
     height: 100vh;
     background-color: #F6F5F7;
 }
-button {
+.ghost {
   margin-top: 10px;
     outline: none;
     border: 1px solid #83cdf8;

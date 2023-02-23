@@ -60,9 +60,9 @@
         <div class="swiper">
             <div class="swiper-wrapper">
               <el-carousel :interval="4000" type="card">
-                      <el-carousel-item v-for="item in comic" :key="index">
+                      <el-carousel-item v-for="item in indexcomic" :key="index">
                                   <div class="medium">
-                                    <img :src="item.imgurl" alt="" >
+                                    <img :src="item.cover" class="fengmian">
                                   </div>
                         </el-carousel-item>
               </el-carousel>
@@ -79,12 +79,25 @@
             <!--每个盒子-->
                   <div class="one">
                     <!--图片-->
-                    <img :src="item.imgurl" alt="" class="oneimg">
+                    <img :src="item.cover"  class="oneimg">
                     <!--文本-->
-                    <h1>内容</h1>
+                    <h1 class="comicname">{{ item.comicName }}</h1>
                   </div>
                 </div>
           </div>
+
+          <div class="block">
+ 
+  <el-pagination
+  @current-change="handleCurrentChange"
+  background
+  :current-page="comic.pageNum"
+  :page-size="comic.pageSize"
+    layout="prev, pager, next"
+    :total="comic.pages"
+    >
+  </el-pagination>
+              </div>
 </div>
 
 
@@ -102,7 +115,9 @@
     
     data(){
 			return {
+                which:'',
                 show3:false,
+                indexcomic:[],
                 user: {
 
                 },
@@ -124,16 +139,57 @@
 			}
 		},
   created(){
-    this.getcomic(0);
+    this.getindexcomic();
+    this.getcomic();
   },
 		methods:{
+      handleCurrentChange(val) {
+        
+       this.get_comic.currentPage=val;
+       this.getcomic()
+        console.log(val)
+        
+      },
       logout() {
 			// 没有后台方法，由前端清除 token
 			this.$VuexStore.commit("setToken", "");
 			this.$router.push("/login");
 		},
+    getindexcomic:function(){
+      this.$Request
+				.fetch_("/comic/getComicByPopularity", "get", )
+				.then((result) => {
+          console.log("主要的")
+					console.log(result)
+          this.indexcomic=result.list;
+          this.indexcomic.map((item) => {
+						if (item.cover) {
+							item.cover = this.$Request.domain + item.cover;
+						}
+						return item;
+					});
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
+    },
 		 getcomic: function(e){
             console.log(e);
+            this.$Request
+				.fetch_("/comic/getComicBySearch", "post", this.get_comic)
+				.then((result) => {
+					console.log(result)
+          this.comic=result;
+          this.comic.list.map((item) => {
+						if (item.cover) {
+							item.cover = this.$Request.domain + item.cover;
+						}
+						return item;
+					});
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
          },
          search(){
             console.log(this.searchtext)
@@ -148,6 +204,11 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
+  
+  .comicname{
+    font-size: 20px;
+    font-weight: 1000;
+  }
   .buju01{
     margin-top: 10px;
     margin-left: 10px;
@@ -173,6 +234,7 @@
   font-size: 15px;
   }
   .zongti{
+    height: 850px;
     width: 85%;
     margin-left: 7%;
     margin-top: 500px;
@@ -182,6 +244,8 @@
     flex-wrap:wrap;
   }
   .one{
+    width: 200px;
+    height: 350px;
     margin-top: 50px;
     margin-left: 40px;
   }
