@@ -1,48 +1,68 @@
 <template>
-	<el-container class="vue-container">
-		<el-header class="vue-header"><Header/></el-header>
+	<div>
+		<div  class="beijing">
+			<el-header class="header">
+				<el-popover
+    placement="top-start"
+    title="点一下就行"
+    width="60"
+    trigger="hover"
+	background-color="#d3dce6">
+    <el-button slot="reference"><router-link to="/" class="tocomic">进入动漫世界</router-link></el-button>
+  </el-popover>
+				
+			</el-header>
+		<div class="top">
+			<!-- 头像 -->
+			<div><img :src="url" class="img01"></div>
+			<!-- 文本 -->
+			<div class="wenben">
+				<h1  class="wenben01">kollwo</h1>
+				<h2  class="wenben02">普通用户</h2>
+				<h3  class="wenben03">2023/2/22</h3>
+			</div>
+			<!-- 点赞和浏览记录 -->
+			<div class="like">
+				<p>点赞</p>
+				<p>3</p>
+			</div>
+			<div class="jilu">
+				<p>浏览记录</p>
+				<p>355</p>
+			</div>
+		</div>
+		<div class="kuan">
 		<el-container>
-			<el-aside
-				:style="{
-					width: this.$VuexStore.state.collapse ? '65px' : '200px',
-				}"
-				class="vue-sidebar"
-			>
-				<Sidebar :menus="menus" />
-			</el-aside>
-			<el-container>
-				<el-main>
-					<!-- 面包屑导航 -->
-					<BreadCrumb />
-					<!--
-						内容区
-						将 user 传递给子组件，接受数据并进行修改
-					-->
-					<router-view/>
-				</el-main>
-				<el-footer class="vue-footer" height="40px;">
-					<Footer :webSiteInfo="webSiteInfo" />
-				</el-footer>
-			</el-container>
-		</el-container>
-	</el-container>
+  <el-container>
+	<div class="sidebar">
+		<el-aside width="200px"><Sidebar :menus="menus" /></el-aside>
+	</div>
+    
+    <el-container>
+		<div class="main">
+			<el-main><router-view/></el-main>
+		</div>
+      
+    </el-container>
+  </el-container>
+</el-container>
+		</div>
+	</div>
+</div>
 </template>
 <script>
-import Header from "@/components/fragements/Header.vue";
-import Sidebar from "@/components/fragements/Sidebar.vue";
-import Footer from "@/components/fragements/Footer.vue";
+import Sidebar from "@/components/fragements/Usersidebar.vue";
 import BreadCrumb from "@/components/fragements/BreadCrumb.vue";
 export default {
 	name: "User",
 	components: {
-		Header,
 		Sidebar,
-		Footer,
 		BreadCrumb,
 	},
 	data() {
 		return {
 			menus: this.$TestData.user,
+			url:"https://tse1-mm.cn.bing.net/th/id/OIP-C.l9T-NQJt5y8YF4iMTcbuSgAAAA?w=148&h=150&c=7&r=0&o=5&dpr=1.3&pid=1.7"
 		};
 	},
 	methods: {
@@ -53,58 +73,87 @@ export default {
 };
 </script>
 <style scoped>
-.el-header,
-.el-footer {
-	background-color: #b3c0d1;
-	color: #333;
-	text-align: center;
-	line-height: 60px;
+.tocomic{
+	font-weight: 1000;
+	text-decoration: none;
+}
+.like{
+	font-weight: 1000;
+	margin-top: 5%;
+	margin-left: 50%;
+}
+.jilu{
+	font-weight: 1000;
+	margin-left: 1%;
+	margin-top: 5%;
+}
+.wenben{
+	margin-left: 10px;
+	margin-top: 30px;
+}
+.wenben01{
+	margin-left: 10px;
+	font-weight: 1000;
+	font-size: 24px;
+}
+.wenben02{
+	font-size: 15px;
+	color: #51c5ef;
+}
+.wenben03{
+	font-size: 12px;
+}
+.beijing{
+	height: 800px;
+	z-index: 999;
+  right: 0px;
+	width: 100%;
+	background-color: #d3dce6;
+}
+.img01{
+	border-radius: 2%;
+	margin-top: 50px;
+	margin-left: 20px;
+	width: 100px;
+	height: 100px;
+}
+.kuan{
+	width: 90%;
+}
+.top{
+	display: flex;
+	flex-direction: row;
+	border-radius: 1%;
+	width: 60%;
+	height: 200px;
+	margin-left: 300px;
+	background-color: rgb(255, 255, 255);
 }
 
-.el-aside {
+
+.sidebar{
+	margin-left: 320px;
+	margin-top: 20px;
 	background-color: #d3dce6;
 	color: #333;
 	text-align: center;
-	line-height: 200px;
+	line-height: 500px;
+	border: 2px;
 }
 
-.el-main {
-	background-color: #e9eef3;
+.main{
+	margin-left: 20px;
+	margin-top: 20px;
+	background-color: rgb(255, 255, 255);
 	color: #333;
+	height: 400px;
+	width: 620px;
+	border: 2px;
 	/* text-align: center; */
 	/* line-height: 160px; */
 }
 
-body > .el-container {
-	margin-bottom: 40px;
-}
 
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-	line-height: 260px;
-}
 
-.el-container:nth-child(7) .el-aside {
-	line-height: 320px;
-}
-/* ======== 自定义 ======== */
-.vue-container {
-	/* font-family: "monaco";
-	font-size: 13px; */
-	position: absolute;
-	width: 100%;
-	top: 0px;
-	left: 0;
-	bottom: 0;
-}
-.vue-header {
-	padding: 0;
-	z-index: 1000;
-}
-.vue-footer {
-	line-height: 40px;
-	background: #dcddd8;
-	display: block;
-	float: right;
-}
+
 </style>

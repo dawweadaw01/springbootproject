@@ -1,14 +1,9 @@
 <template>
     <div class="hello">
-    <h1>主页</h1>
-      <router-link to="/login">登录</router-link>
-      <button @click="loginout()">注销</button>
-      <router-link to="/user"></router-link>
-
-
       <div class="all-wrapper">
     <!-- 创建外层容器 -->
     <div class="out-wrapper">
+        
         <!-- 创建导航栏容器 -->
         <div class="header-wrapper">
            
@@ -16,25 +11,22 @@
             <div class="nav-bar">
                 <ul class="navBar">
                     <li>
-                        <a href="index.do">首页</a>
-                    </li>
-                    <li id="riben">
-                        <a href="javascript:void(0);">日本动漫</a>
-                    </li>
-                    <li id="guo">
-                        <a href="javascript:void(0);">国产动漫</a>
+                        <div @click="getcomic('')">首页</div>
                     </li>
                     <li>
-                        <a href="javascript:void(0);">动漫电影</a>
+                        <div @click="getcomic('日本')">日本动漫</div>
                     </li>
                     <li>
-                        <a href="news/news.do">动漫资讯</a>
+                        <div @click="getcomic('大陆')">国产动漫</div>
                     </li>
                     <li>
-                        <a href="javascript:void(0);">欧美动漫</a>
+                        <div @click="getcomic('热血')">热血动漫</div>
                     </li>
                     <li>
-                        <a href="javascript:void(0);">专题</a>
+                        <div @click="getcomic('冒险')">冒险动漫</div>
+                    </li>
+                    <li>
+                        <div @click="getcomic('奇幻')">奇幻动漫</div>
                     </li>
                 </ul>
             </div>
@@ -45,7 +37,22 @@
             <!-- 创建搜索框 -->
             <div class="search-in">
                 <i class="iconfont icon-search"></i>
-                <input type="text" id="input" name="keywords" placeholder="请输入关键词">
+                <input type="text" v-model="searchtext" name="keywords" placeholder="请输入关键词">
+                <button class="searchbutton" @click="search()">搜索</button>
+                <!--  登录 -->
+            <div class="buju">
+    <el-button @click="show3 = !show3" v-if="user!=null">你好，陌生人</el-button>
+    <el-button @click="show3 = !show3" v-if="user==null">用户实际名字</el-button>
+    <div style="height: 100px;" class="buju">
+      <el-collapse-transition>
+        <div v-show="show3" class="buju">
+          <div class="buju01"><router-link to="/login"  v-if="user!=null">登录</router-link></div>
+          <div class="buju01"> <button @click="loginout()" v-if="user!=null" class="loginbutton">注销</button></div>
+          <div class="buju01"> <router-link to="/user" v-if="user!=null">个人中心</router-link></div>
+        </div>
+      </el-collapse-transition>
+    </div>
+            </div>
             </div>
         </div>
 
@@ -53,7 +60,7 @@
         <div class="swiper">
             <div class="swiper-wrapper">
               <el-carousel :interval="4000" type="card">
-                      <el-carousel-item v-for="item in comic" :key="item.id">
+                      <el-carousel-item v-for="item in comic" :key="index">
                                   <div class="medium">
                                     <img :src="item.imgurl" alt="" >
                                   </div>
@@ -62,12 +69,13 @@
             </div>
         </div>
            
+        
         </div>
   
     </div>
    <!--主体内容-->
    <div class="zongti" >
-             <div v-for="item in comic" :key="item.id">
+             <div v-for="item in comic.list" :key="index">
             <!--每个盒子-->
                   <div class="one">
                     <!--图片-->
@@ -94,42 +102,42 @@
     
     data(){
 			return {
-				comic:[
-					{	
-                        id:0,
-						imgurl:"https://img0.baidu.com/it/u=3156137851,1307209439&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-					},{
-                        id:1,
-            imgurl:"https://img0.baidu.com/it/u=2028084904,3939052004&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-					},{
-						id:2,
-            imgurl:"https://img0.baidu.com/it/u=1472391233,99561733&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-					},{
-						id:3,
-						imgurl:"https://img2.baidu.com/it/u=3304620759,1323144983&fm=253&fmt=auto&app=138&f=JPEG?w=756&h=500",
-					},
-                    {	id:4,
-						imgurl:"https://img0.baidu.com/it/u=3156137851,1307209439&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-					},{
-                        id:5,
-            imgurl:"https://img0.baidu.com/it/u=2028084904,3939052004&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-					},{
-						id:6,
-            imgurl:"https://img0.baidu.com/it/u=1472391233,99561733&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-					},{
-						id:7,
-						imgurl:"https://img2.baidu.com/it/u=3304620759,1323144983&fm=253&fmt=auto&app=138&f=JPEG?w=756&h=500",
-					},
-				]
+                show3:false,
+                user: {
+
+                },
+               get_comic: {
+				currentPage: 1,
+				pageSize: 10,
+				keyword: "",
+				sort: "popularity",
+				direction: "desc",
+			        },
+                    comic: {
+				total: 30, // 总数据量
+				pageNum: 1, // 当前页
+				pageSize: 10, // 页长
+				pages: 1, // 总页数
+				list: [], // 当前页数据集合
+			        },
+            searchtext:''
 			}
 		},
+  created(){
+    this.getcomic(0);
+  },
 		methods:{
       logout() {
 			// 没有后台方法，由前端清除 token
 			this.$VuexStore.commit("setToken", "");
 			this.$router.push("/login");
 		},
-		 
+		 getcomic: function(e){
+            console.log(e);
+         },
+         search(){
+            console.log(this.searchtext)
+         }
 		},
 		
 	
@@ -140,9 +148,33 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
+  .buju01{
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+  .buju{
+    display: flex;
+    flex-direction: row;
+  }
+  .searchbutton{
+    width: 100px;
+    height: 50px;
+    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+  }
+  .loginbutton{
+    margin-top: 1px;
+   color: #f61010;
+   font-size: 15px;
+  }
+  button{
+    cursor: pointer;
+    background-color: unset;
+   border: 0;
+  font-size: 15px;
+  }
   .zongti{
-    width: 1500px;
-    margin-left: 70px;
+    width: 85%;
+    margin-left: 7%;
     margin-top: 500px;
     background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
     display: flex;
@@ -151,11 +183,11 @@
   }
   .one{
     margin-top: 50px;
-    margin-left: 60px;
+    margin-left: 40px;
   }
   .oneimg{
-    width:300px;
-    height:400px;
+    width:200px;
+    height:300px;
   }
   .medium{
     width: 600px;
@@ -170,6 +202,7 @@
 }
 
 .all-wrapper{
+    margin-top: 50px;
     width: 100%;
     height: 100%;
     background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
@@ -205,6 +238,7 @@ a:visited{
 
 /* 设置导航栏 */
 .nav-bar{
+    position: absolute;
     width: 900px;
     height: 60px;
     background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
@@ -237,8 +271,10 @@ a:visited{
 }
 
 .search-wrapper .search-in{
-    width: 300px;
+    width: 800px;
     height: 50px;
+    display: flex;
+    flex-direction: row;
 }
 .search-in i{ 
     width: 50px;
