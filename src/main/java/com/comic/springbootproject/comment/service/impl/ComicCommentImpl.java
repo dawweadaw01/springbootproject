@@ -3,9 +3,14 @@ package com.comic.springbootproject.comment.service.impl;
 import com.comic.springbootproject.comment.dao.ComicCommentDao;
 import com.comic.springbootproject.comment.entity.ComicComment;
 import com.comic.springbootproject.comment.entity.Comment;
+import com.comic.springbootproject.comment.entity.CommentReplyContent;
 import com.comic.springbootproject.comment.service.ComicCommentService;
+import com.comic.springbootproject.comment.service.CommentReplyContentService;
 import com.comic.springbootproject.common.vo.Result;
+import com.comic.springbootproject.user.dao.UserDao;
+import com.comic.springbootproject.user.entity.User;
 import com.comic.springbootproject.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,7 +24,10 @@ public class ComicCommentImpl implements ComicCommentService {
     @Resource
     private ComicCommentDao comicCommentDao;
     @Resource
-    private UserService userService;
+    private CommentReplyContentService commentReplyContentService;
+
+    @Resource
+    private UserDao userDao;
 
     @Override
     @Transactional
@@ -48,25 +56,22 @@ public class ComicCommentImpl implements ComicCommentService {
 
     @Override
     @Transactional
-    public List<ComicComment> selectCommentByComicId(int comicId) {
+    public Result<List<ComicComment>> selectCommentByComicId(int comicId) {
 
         List<ComicComment> comicCommentList = comicCommentDao.selectCommentByComicId(comicId);
         SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //遍历评论列表，将评论id转换为评论内容
         for (ComicComment comicComment : comicCommentList) {
-            if (comicComment.getCommentId() != 0) {
-                comicComment.setComment(comicCommentDao.selectCommentByCommentId
-                        (comicComment.getCommentId()).getComment());
-                Long time = Long.parseLong(comicComment.getCreateTime());
-                comicComment.setCreateTime(sdfDatetime.format(new Date(time)));
-                // TODO : 得到用户的头像和用户名
-                //设置用户姓名头像
-//                comicComment.setUserName
-//                        (userService.getUserById(comicComment.getUserId()).getUserName());
-//                comicComment.setAvatar(
-//                        userService.getUserById(comicComment.getUserId()).getAvatar());
-            }
+            Comment comment = comicCommentDao.selectCommentByCommentId(comicComment.getCommentId());
+            comicComment.setComment(comment.getComment());
+            comicComment.setCreateTime(sdfDatetime.format(Long.parseLong(comicComment.getCreateTime())));
+            User user1 = userDao.getUserById(comicComment.getUserId());
+            comicComment.setUserName(user1.getUserName());
+            comicComment.setAvatar(user1.getAvatar());
+            List<CommentReplyContent> commentReplyContents = commentReplyContentService.
+                    selectCommentReplyContentByComicCommentId(comicComment.getId());
+            comicComment.setCommentReplyContentList(commentReplyContents);
         }
-        return comicCommentList;
+        return Result.ok("一级评论查询成功",comicCommentList);
     }
 }

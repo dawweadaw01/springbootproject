@@ -19,4 +19,6 @@ public interface ComicService {
     Comic getComicById(int id);
 
     PageInfo<Comic> getComicListBySearch(Search search);
+
+    PageInfo<Comic> getComicListByPopularity();
 }

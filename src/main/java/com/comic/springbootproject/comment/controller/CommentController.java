@@ -20,7 +20,6 @@ public class CommentController {
 
     /**
      * URL: http://localhost/comment/insertComicComment
-     *
      * @param comicComment:{comicId:1,userId:1,comment:"hello"}
      * @return 信息
      */
@@ -31,7 +30,6 @@ public class CommentController {
 
     /**
      * URL: http://localhost/comment/deleteComicCommentByComicId/1
-     *
      * @param comicCommentId
      * @return 信息
      */
@@ -46,7 +44,7 @@ public class CommentController {
      * @return 评论
      */
     @GetMapping(value = "/selectCommentByComicId/{comicId}")
-    public List<ComicComment> selectCommentByComicId(@PathVariable("comicId") int comicId) {
+    public Result<List<ComicComment>> selectCommentByComicId(@PathVariable("comicId") int comicId) {
         return comicCommentService.selectCommentByComicId(comicId);
     }
 }

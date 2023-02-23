@@ -47,7 +47,6 @@ public class ComicServiceImpl implements ComicService {
         if(temp!=null && temp.getId() != comic.getId()){
             return Result.failed("动漫名称重复");
         }
-        // 修改账簿对象
         comicDao.updateComic(comic);
         // 删除
         comicDao.deleteComicById(comic.getId());
@@ -79,6 +78,16 @@ public class ComicServiceImpl implements ComicService {
         PageHelper.startPage(search.getCurrentPage(), search.getPageSize());
         // 返回 pageinfo 对象
 //		return new PageInfo<>(userDao.getUsersBySearch(search));
+        return new PageInfo<>(Optional
+                .ofNullable(comicDao.getComicBySearch(search))
+                .orElse(Collections.emptyList()));
+    }
+
+    @Override
+    public PageInfo<Comic> getComicListByPopularity() {
+        Search search = new Search();
+        search.initSearch();
+        PageHelper.startPage(search.getCurrentPage(), search.getPageSize());
         return new PageInfo<>(Optional
                 .ofNullable(comicDao.getComicBySearch(search))
                 .orElse(Collections.emptyList()));

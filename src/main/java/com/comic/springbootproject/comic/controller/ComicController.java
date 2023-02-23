@@ -68,4 +68,13 @@ public class ComicController {
         return comicService.getComicListBySearch(search);
     }
 
+    /**
+     * localhost/comic/getComicByPopularity   ----get
+     * @return 按照热度降序排列前五条数据
+     */
+    @GetMapping(value = "/getComicByPopularity")
+    public PageInfo<Comic> getComicListByPopularity() {
+        return comicService.getComicListByPopularity();
+    }
+
 }

@@ -10,6 +10,6 @@ public interface ComicCommentService {
 
     Result<Object> deleteComicCommentByComicCommentId(int ComicCommentId);
 
-    List<ComicComment> selectCommentByComicId(int comicId);
+    Result<List<ComicComment>> selectCommentByComicId(int comicId);
 
 }
