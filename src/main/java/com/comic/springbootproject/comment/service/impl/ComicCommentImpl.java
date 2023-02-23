@@ -1,6 +1,7 @@
 package com.comic.springbootproject.comment.service.impl;
 
 import com.comic.springbootproject.comment.dao.ComicCommentDao;
+import com.comic.springbootproject.comment.dao.CommentReplyContentDao;
 import com.comic.springbootproject.comment.entity.ComicComment;
 import com.comic.springbootproject.comment.entity.Comment;
 import com.comic.springbootproject.comment.entity.CommentReplyContent;
@@ -25,9 +26,10 @@ public class ComicCommentImpl implements ComicCommentService {
     private ComicCommentDao comicCommentDao;
     @Resource
     private CommentReplyContentService commentReplyContentService;
-
     @Resource
     private UserDao userDao;
+    @Resource
+    private CommentReplyContentDao commentReplyContentDao;
 
     @Override
     @Transactional
@@ -49,6 +51,14 @@ public class ComicCommentImpl implements ComicCommentService {
                 (ComicCommentId);
         if (comicComment.getCommentId() != 0) {
             comicCommentDao.deleteCommentByCommentId(comicComment.getCommentId());
+        }
+        //得到二级回复列表
+        List<CommentReplyContent> commentReplyContents = commentReplyContentDao.
+                selectCommentReplyContentByComicCommentId(ComicCommentId);
+        //遍历二级回复列表，删除二级回复
+        for (CommentReplyContent commentReplyContent : commentReplyContents) {
+            commentReplyContentService.deleteCommentReplyContentByCommentReplyContentId
+                    (commentReplyContent.getId());
         }
         comicCommentDao.deleteComicCommentByComicCommentId(ComicCommentId);
         return Result.ok("删除评论成功");
@@ -72,6 +82,11 @@ public class ComicCommentImpl implements ComicCommentService {
                     selectCommentReplyContentByComicCommentId(comicComment.getId());
             comicComment.setCommentReplyContentList(commentReplyContents);
         }
-        return Result.ok("一级评论查询成功",comicCommentList);
+        return Result.ok("一级评论查询成功", comicCommentList);
+    }
+
+    @Override
+    public void deleteCommentByComicCommentId(int ComicCommentId) {
+
     }
 }

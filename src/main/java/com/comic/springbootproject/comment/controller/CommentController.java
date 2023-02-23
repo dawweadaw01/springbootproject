@@ -29,11 +29,11 @@ public class CommentController {
     }
 
     /**
-     * URL: http://localhost/comment/deleteComicCommentByComicId/1
+     * URL: http://localhost/comment/deleteComicCommentByComicCommentId/1
      * @param comicCommentId
      * @return 信息
      */
-    @DeleteMapping(value = "/deleteComicCommentByComicId/{comicCommentId}")
+    @DeleteMapping(value = "/deleteComicCommentByComicCommentId/{comicCommentId}")
     public Result<Object> deleteComicCommentByComicCommentId(@PathVariable("comicCommentId") int comicCommentId) {
         return comicCommentService.deleteComicCommentByComicCommentId(comicCommentId);
     }

@@ -8,6 +8,7 @@ import com.comic.springbootproject.user.entity.UserHistory;
 import com.comic.springbootproject.user.service.UserRecordService;
 import com.comic.springbootproject.user.service.UserService;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Api(tags = "用户管理")
 public class UserController {
     @Resource
     private UserService userService;
@@ -28,6 +30,7 @@ public class UserController {
      * @return result信息
      */
     @PostMapping(value = "/insertUser",consumes = MediaType.APPLICATION_JSON_VALUE)
+
     public Result<User> insertUser(@RequestBody User user) {
         return userService.insertUser(user);
     }

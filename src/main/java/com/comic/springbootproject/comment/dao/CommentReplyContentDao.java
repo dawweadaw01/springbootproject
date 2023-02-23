@@ -24,6 +24,7 @@ public interface CommentReplyContentDao {
         void insertCommentReplyContent(CommentReplyContent commentReplyContent);
         @Delete("delete from comment_reply_content where id = #{commentReplyContentId}")
         void deleteCommentReplyContentByCommentReplyContentId(int commentReplyContentId);
+
         @Select("select * from comment_reply_content where comicCommentId = #{ComicCommentId} order by createTime asc")
         List<CommentReplyContent> selectCommentReplyContentByComicCommentId(int ComicCommentId);
 
