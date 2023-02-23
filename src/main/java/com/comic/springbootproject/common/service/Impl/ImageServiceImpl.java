@@ -6,6 +6,7 @@ import com.comic.springbootproject.common.vo.Result;
 import com.comic.springbootproject.config.ResourceBean;
 import com.comic.springbootproject.util.FileUtil;
 
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,11 +42,18 @@ public class ImageServiceImpl implements ImageService {
         //获取文件夹
         String path1 = ResourceUtils.getURL("classpath:").getPath()+"static/"+it.name;
         String realPath = path1.replace('/', '\\').substring(1,path1.length());
+        ApplicationHome applicationHome = new ApplicationHome(this.getClass());
+        String pre = applicationHome.getDir().getParentFile().getParentFile().
+                getAbsolutePath() + "\\src\\main\\resources\\static\\"+it.name;
 
         //用于查看路径是否正确
         File pathFile1 = new File(realPath);
         if (!pathFile1.exists()) {
             pathFile1.mkdirs();
+        }
+        File pathFile2 = new File(pre);
+        if (!pathFile2.exists()) {
+            pathFile2.mkdirs();
         }
         //获取文件名
        // String fileName = String.format("%s.%s", System.currentTimeMillis(),
@@ -54,6 +62,8 @@ public class ImageServiceImpl implements ImageService {
         String fileName = new Date().getTime()+"_"+mf.getOriginalFilename();
         //文件写入路径
         String transferPath = realPath+"/"+fileName;
+        String transferPath2 = pre+"/"+fileName;
+
 
         //获取文件访问路径
         String relatedPath = String.format("/%s/%s", it.name, fileName);
@@ -61,6 +71,7 @@ public class ImageServiceImpl implements ImageService {
         //写文件
         try {
             mf.transferTo(new File(transferPath));
+            mf.transferTo(new File(transferPath2));
         } catch (IOException e) {
             System.out.println("文件写入失败");
                 throw new RuntimeException(e);
