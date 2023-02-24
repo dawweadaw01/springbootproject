@@ -52,10 +52,11 @@ export default {
     shanchu(item){
       this.likejson.userId=this.$TestData.yonghu.id
 				this.likejson.comicId=item.id
-      this.$Request
-				.fetch_("/user/deleteCollection", "post", this.likejson)
+          this.$Request
+				.fetch_("/user/deleteCollection", "delete", this.likejson)
 				.then((result) => {
-					console.log(result)
+					if(result.code==200)this.$message.info("删除成功")
+          this.getlike()
 				})
 				.catch((error) => {
 					this.$message.error(error);
@@ -93,8 +94,9 @@ export default {
 <style scoped>
 .shanchu{
   margin-top: 5px;
-  margin-left: 30px;
+  margin-left: 10px;
   font-weight: 100;
+  color: #eb0a0af7;
 }
 .you{
   margin-left: 20px;

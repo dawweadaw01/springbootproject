@@ -9,8 +9,8 @@
         <i class="el-icon-user"></i>
         头像
       </template>
-      <img :src="url" class="touxiang" v-if="user.avatra==null">
-      <img :src="user.avatra" class="touxiang" v-if="user.avatra!=null">
+      <img :src="url" class="touxiang" v-if="user.avatar==null">
+      <img :src="user.avatar" class="touxiang" v-if="user.avatar!=null">
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">

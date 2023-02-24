@@ -14,7 +14,7 @@
 					 <p>最近更新:{{ comic.updateTime }}</p>
 					 <p>总集数:{{ comic.number }}</p>
 					 <p>更新到多少集:{{ comic.remark }}</p>
-					 
+					 <p @click="like()" class="xuan">☆</p>
    			</div>			
   			</div>
 			<div class="bianjie"></div>
@@ -136,7 +136,10 @@ infinite-scroll-distance="5" >
 					comment:'',
 					
 				},
-
+				likeuser:{
+					userId:'',
+					comicId:''
+				},
 				replyid:''
 			}
 		},
@@ -146,6 +149,19 @@ infinite-scroll-distance="5" >
 			this.addhistory()
 		},
 		methods:{
+			like(){
+				this.likeuser.userId=this.user.id
+				this.likeuser.comicId=this.comic.id
+				this.$Request
+				.fetch_("/user/insertCollection", "post", this.likeuser)
+				.then((result) => {
+					if(result.code==200)this.$message.info("收藏成功")
+					else this.$message.info("已经收藏过了")
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
+			},
 			clear(){
 				this.comment='',
 				this.placeholder='',
@@ -222,15 +238,22 @@ infinite-scroll-distance="5" >
 						if (item.avatar) {
 							item.avatar = this.$Request.domain + item.avatar;
 						}
-						return item;
-        })
-		this.commentlist.commentReplyContentList.map((item) => {
-						if (item.replyAvatar) {
-							item.replyAvatar = this.$Request.domain + item.replyAvatar;
+						if(item.commentReplyContentList.map((a)=>{
+							if (a.replyAvatar) {
+							a.replyAvatar = this.$Request.domain + a.replyAvatar;
 						}
+						return a;
+						}))
 						return item;
-				
         })
+		// this.commentlist.commentReplyContentList.map((a) => {
+		// 	console.log("sss")
+		// 				if (a.replyAvatar) {
+		// 					a.replyAvatar = this.$Request.domain + a.replyAvatar;
+		// 				}
+		// 				return a;
+				
+        // })
 		
         })
 		
@@ -291,6 +314,10 @@ infinite-scroll-distance="5" >
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
+  .xuan{
+	cursor: pointer;
+    background-color: unset;
+  }
   .kreply{
 	cursor: pointer;
     background-color: unset;
