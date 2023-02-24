@@ -66,6 +66,17 @@ public class ComicController {
     }
 
     /**
+     * localhost/comic/getComicById/2   ----get
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/getComicById/{id}")
+    public Comic getComicById(@PathVariable("id") int id) {
+        return comicService.getComicById(id);
+    }
+
+
+    /**
      * localhost/comic/getComicByPopularity   ----get
      * @return 按照热度降序排列前五条数据
      */
