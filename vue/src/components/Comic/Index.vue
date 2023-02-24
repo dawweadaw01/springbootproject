@@ -41,14 +41,14 @@
                 <button class="searchbutton" @click="search()">搜索</button>
                 <!--  登录 -->
             <div class="buju">
-    <el-button @click="show3 = !show3" v-if="user!=null">你好，陌生人</el-button>
-    <el-button @click="show3 = !show3" v-if="user==null">用户实际名字</el-button>
+    <el-button @click="show3 = !show3" v-if="user.userName==''" class="username">你好，陌生人</el-button>
+    <el-button @click="show3 = !show3" v-if="user.userName!=''" class="username">{{user.userName}}</el-button>
     <div style="height: 100px;" class="buju">
       <el-collapse-transition>
         <div v-show="show3" class="buju">
-          <div class="buju01"><router-link to="/login"  v-if="user!=null">登录</router-link></div>
-          <div class="buju01"> <button @click="loginout()" v-if="user!=null" class="loginbutton">注销</button></div>
-          <div class="buju01"> <router-link to="/user" v-if="user!=null">个人中心</router-link></div>
+          <div class="buju01"><router-link to="/login"  v-if="user.userName==''">登录</router-link></div>
+          <div class="buju01"> <button @click="loginout()" v-if="user.userName!=''" class="loginbutton">注销</button></div>
+          <div class="buju01"> <router-link to="/user" v-if="user.userName!=''">个人中心</router-link></div>
         </div>
       </el-collapse-transition>
     </div>
@@ -60,9 +60,9 @@
         <div class="swiper">
             <div class="swiper-wrapper">
               <el-carousel :interval="4000" type="card">
-                      <el-carousel-item v-for="item in indexcomic" :key="index">
+                      <el-carousel-item v-for="item in indexcomic" :key="item.id">
                                   <div class="medium">
-                                    <img :src="item.cover" class="fengmian">
+                                    <img :src="item.cover" class="fengmian" @click="todetail(item)">
                                   </div>
                         </el-carousel-item>
               </el-carousel>
@@ -75,9 +75,9 @@
     </div>
    <!--主体内容-->
    <div class="zongti" >
-             <div v-for="item in comic.list" :key="index">
+             <div v-for="item in comic.list" :key="item.id">
             <!--每个盒子-->
-                  <div class="one">
+                  <div class="one" @click="todetail(item)" >
                     <!--图片-->
                     <img :src="item.cover"  class="oneimg">
                     <!--文本-->
@@ -85,6 +85,7 @@
                   </div>
                 </div>
           </div>
+<div class="juli"></div>
 
           <div class="block">
  
@@ -94,7 +95,7 @@
   :current-page="comic.pageNum"
   :page-size="comic.pageSize"
     layout="prev, pager, next"
-    :total="comic.pages"
+    :total="comic.total"
     >
   </el-pagination>
               </div>
@@ -108,7 +109,7 @@
   
 
   export default {
-    name: 'HelloWorld',
+    name: 'Index',
     props: {
       msg: String
     },
@@ -118,9 +119,7 @@
                 which:'',
                 show3:false,
                 indexcomic:[],
-                user: {
-
-                },
+                user:this.$TestData.yonghu,
                get_comic: {
 				currentPage: 1,
 				pageSize: 10,
@@ -143,19 +142,22 @@
     this.getcomic();
   },
 		methods:{
-      handleCurrentChange(val) {
-        
+      todetail:function(item){
+        this.$router.push({path: '/detail',query:{item}});
+      },
+      handleCurrentChange:function(val) {
        this.get_comic.currentPage=val;
        this.getcomic()
         console.log(val)
-        
       },
-      logout() {
+      loginout:function() {
 			// 没有后台方法，由前端清除 token
 			this.$VuexStore.commit("setToken", "");
 			this.$router.push("/login");
 		},
     getindexcomic:function(){
+      console.log("用户")
+      console.log(this.user)
       this.$Request
 				.fetch_("/comic/getComicByPopularity", "get", )
 				.then((result) => {
@@ -175,6 +177,7 @@
     },
 		 getcomic: function(e){
             console.log(e);
+            this.get_comic.keyword=e;
             this.$Request
 				.fetch_("/comic/getComicBySearch", "post", this.get_comic)
 				.then((result) => {
@@ -191,20 +194,40 @@
 					this.$message.error(error);
 				});
          },
-         search(){
-            console.log(this.searchtext)
+         search:function(){
+          console.log(this.searchtext)
+          this.get_comic.keyword=this.searchtext;
+          this.$Request
+				.fetch_("/comic/getComicBySearch", "post", this.get_comic)
+				.then((result) => {
+					console.log(result)
+          this.comic=result;
+          this.comic.list.map((item) => {
+						if (item.cover) {
+							item.cover = this.$Request.domain + item.cover;
+						}
+						return item;
+					});
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
          }
 		},
-		
-	
-
-    
   }
   </script>
-  
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
-  
+  .block{
+    overflow:auto;
+  }
+  .juli{
+    margin-top: 30px;
+  }
+  .username{
+    font-weight: 1000;
+    margin-left: 10px;
+  }
   .comicname{
     font-size: 20px;
     font-weight: 1000;

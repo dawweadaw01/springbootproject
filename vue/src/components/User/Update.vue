@@ -1,17 +1,17 @@
 <template>
     <div class="hello">
-      <el-collapse v-model="activeName" accordion>
+      <el-collapse  accordion>
   <el-collapse-item title="用户名" name="1">
-    <div><el-input v-model="username" placeholder="username"></el-input></div>
+    <div class="kuandu"><el-input v-model="user.userName" placeholder="user.userName"></el-input></div>
   </el-collapse-item>
   <el-collapse-item title="邮箱" name="2">
-    <div><el-input v-model="email" placeholder="email"></el-input></div>
+    <div class="kuandu"><el-input v-model="user.email" placeholder="user.email"></el-input></div>
   </el-collapse-item>
   <el-collapse-item title="密码" name="3">
-    <div><el-input placeholder="password" v-model="password" show-password></el-input></div>
+    <div class="kuandu"><el-input placeholder="user.password" v-model="user.password" show-password></el-input></div>
   </el-collapse-item>
   <el-collapse-item title="电话号码" name="4">
-    <div><el-input v-model="phonenumber" placeholder="phonenumber"></el-input></div>
+    <div class="kuandu"><el-input v-model="user.phone" placeholder="user.phone"></el-input></div>
   </el-collapse-item>
 </el-collapse>
 <el-button type="submit" @click="update" round class="ti">提交修改</el-button>
@@ -27,17 +27,21 @@
     },
     data() {
       return {
-        phonenumber:'18783451844',
-        activeName: '1',
-        username:'1792208603',
-        password:'123',
-        email:'1792208603@qq.com',
-        imgurl:''
+        user:this.$TestData.yonghu,
       };
     },
     methods: {
       update(){
-        console.log(this.username)
+        this.$Request
+				.fetch_("/user/updateUser", "put", this.user)
+				.then((result) => {
+					if(result.code==200){
+            this.$message.info("修改成功");
+          }
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
       }
     }
   }
@@ -48,8 +52,9 @@
   .ti{
     margin-top: 10px;
   }
-  input{
-    width: 200px;
+ .kuandu{
+ margin-left: 10%;
+    width: 50%;
   }
   </style>
   

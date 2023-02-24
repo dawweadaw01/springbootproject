@@ -1,114 +1,151 @@
 <template>
-    <div class="hello">
-
- 
-          <ul
- class="pagelist"
-  v-infinite-scroll="loadMore"
-  infinite-scroll-disabled="loading"
-  infinite-scroll-distance="5" >
-  <li v-for="item in list" style="list-style:none">
-    <!-- 动漫展示 -->
-    <div class="one" @click="todetail">        
-            <img :src="url" class="comicimg">
-              <div class="fudong">
-                <p class="name">小丑合集</p>
-                <p class="miaoshu">这是以书法家和放数据奥会发生ssssssssssssssss</p>
-              </div>
+  <div class="hello">
+        <ul
+class="pagelist"
+v-infinite-scroll="loadMore"
+infinite-scroll-disabled="loading"
+infinite-scroll-distance="5" >
+<li v-for="item in list" style="list-style:none">
+  <!-- 动漫展示 -->
+  <div class="one" @click="todetail">        
+          <img :src="item.cover" class="comicimg">
+            <div class="fudong">
+              <p class="name">{{item.comicName}}</p>
+              <p class="miaoshu">{{item.description}}</p>
+            </div>
+         
+            <div class="you">
+              <p class="label">{{item.region}}</p>
+              <p class="time">{{item.updateTime}}</p>
+            </div>
+            <div  class="shanchu">
+              <button @click="shanchu(item)">删除</button>
+            </div>
            
-              <div class="you">
-                <p class="label">热血</p>
-                <p class="time">2023/22/13-11-40</p>
-              </div>
-          </div>
-        </li>
+        </div>
+      </li>
 </ul>
-    </div>  
-  </template>
+  </div>  
+</template>
+
+<script>
+export default {
+  name: 'Detail',
+  props: {
+    msg: String
+  },
+  data(){
+    return{
+      url:"",
+      loading:false,
+      list:[],
+      likejson:{
+        userId:'',
+        comicId:''
+      }
+    };
+  },
+ created(){
+    this.getlike();
+ },
+  methods: {
+    shanchu(item){
+      this.likejson.userId=this.$TestData.yonghu.id
+				this.likejson.comicId=item.id
+      this.$Request
+				.fetch_("/user/deleteCollection", "post", this.likejson)
+				.then((result) => {
+					console.log(result)
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
+    },
+      loadMore() {
+        this.loading = true
+      },
+      todetail:function(){
+        
+      },
+      getlike(){
+        var url = "/user/selectCollectionByUserId/" + this.$TestData.yonghu.id;
+      this.$Request
+        .fetch(url)
+        .then((result) => {
+          console.log(result)
+          this.list=result.data
+          this.list.map((item) => {
+						if (item.cover) {
+							item.cover = this.$Request.domain + item.cover;
+						}
+						return item;
+					});
+        })
+        .catch((error) => {
+          this.$message.info("没有数据。");
+        });
+      }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.shanchu{
+  margin-top: 5px;
+  margin-left: 30px;
+  font-weight: 100;
+}
+.you{
+  margin-left: 20px;
+}
+.label{
+  font-weight: 1000;
+  margin-top: 10px;
+  color: #3c3a3a;
+  background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+}
+.time{
+  margin-top: 50px;
+  font-size: 10px;
+  color: #1d8ccc;
+}
+.fudong{
   
-  <script>
-  export default {
-    name: 'Detail',
-    props: {
-      msg: String
-    },
-    data(){
-      return{
-        url:"",
-        loading:false,
-        list:[1,2,3,4,5,6]
-      };
-    },
-    computed: {
-      
-    },
-    methods: {
-        loadMore() {
-          this.loading = true
-        },
-        todetail:function(){
-          
-        }
-    }
-  }
-  </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
-  .you{
-    margin-left: 20px;
-  }
-  .label{
-    font-weight: 1000;
-    margin-top: 10px;
-    color: #3c3a3a;
-    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
-  }
-  .time{
-    margin-top: 50px;
-    font-size: 10px;
-    color: #1d8ccc;
-  }
-  .fudong{
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    margin-left: 10px;
-  }
-  .name{
-    font-weight: 1000;
-  }
-  .pagelist{
-    height: 300px;
-    overflow-y: auto;
+  text-align: left;
+  margin-left: 10px;
+}
+.name{
+  font-weight: 1000;
+}
+.pagelist{
+  height: 300px;
+  overflow-y: auto;
 }
 .miaoshu{
-  width: 300px;
-  font-size: 15px;
-  font-weight: 500;
-  overflow: hidden;
-
+width: 300px;
+font-size: 15px;
+font-weight: 500;
+overflow: hidden;
 text-overflow: ellipsis;
-
 white-space: nowrap;
 }
 
-  .zong{
-    display: flex;
-    flex-direction: column;
-  }
-  .one{
-    
-    border: 1px solid rgb(202, 200, 200);
-    display: flex;
-    flex-direction: row;
-  }
-  .comicimg{
-    margin-top: 3px;
-    margin-left: 3px;
-    width: 80px;
-    height: 98px;
-    border-radius: 2%;
-  }
-  </style>
-  
+.zong{
+  display: flex;
+  flex-direction: column;
+}
+.one{
+  height: 100px;
+  border: 1px solid rgb(202, 200, 200);
+  display: flex;
+  flex-direction: row;
+}
+.comicimg{
+  margin-top: 5px;
+  margin-left: 5px;
+  width: 80px;
+  height: 90px;
+  border-radius: 2%;
+}
+</style>

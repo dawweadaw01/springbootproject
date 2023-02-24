@@ -92,11 +92,26 @@
             .then((result)=>{
               console.log(result)
               if(result.code==200){
-                this.$message('登录成功'),
+                this.$message.info('登录成功'),
+                this.$TestData.yonghu.userName=result.data.userName;
+                this.$TestData.yonghu.createTime=result.data.createTime;
+                this.$TestData.yonghu.email=result.data.email;
+                this.$TestData.yonghu.password=result.data.password;
+                this.$TestData.yonghu.phone=result.data.phone;
+                this.$TestData.yonghu.avatra=result.data.avatar;
+                this.$TestData.yonghu.isAdmin=result.data.isAdmin;
+                this.$TestData.yonghu.id=result.data.id;
+                console.log(this.$TestData.yonghu)
                 this.$VuexStore.commit("setToken", result.data);
-							this.$router.push("/");
+                if(result.data.isAdmin==0){
+                  this.$router.push("/");
+                }else{
+                  this.$router.push("/permission/user");
+                }
+               
+							
               }else{
-                this.$message('账号密码错误'),
+                this.$message.info('账号密码错误'),
                 this.user.userName='',
                 this.user.password=''
               }

@@ -1,7 +1,5 @@
 <template>
   <div class="hello">
-
-
         <ul
 class="pagelist"
 v-infinite-scroll="loadMore"
@@ -10,16 +8,20 @@ infinite-scroll-distance="5" >
 <li v-for="item in list" style="list-style:none">
   <!-- 动漫展示 -->
   <div class="one" @click="todetail">        
-          <img :src="url" class="comicimg">
+          <img :src="item.cover" class="comicimg">
             <div class="fudong">
-              <p class="name">小丑合集</p>
-              <p class="miaoshu">这是以书法家和放数据奥会发生ssssssssssssssss</p>
+              <p class="name">{{item.comicName}}</p>
+              <p class="miaoshu">{{item.description}}</p>
             </div>
          
             <div class="you">
-              <p class="label">热血</p>
-              <p class="time">2023/22/13-11-40</p>
+              <p class="label">{{item.region}}</p>
+              <p class="time">{{item.updateTime}}</p>
             </div>
+            <!-- <div  class="shanchu">
+              <button @click="shanchu(item)">删除</button>
+            </div> -->
+           
         </div>
       </li>
 </ul>
@@ -36,18 +38,52 @@ export default {
     return{
       url:"",
       loading:false,
-      list:[1,2,3,4,5,6]
+      list:[],
+      historyjson:{
+        userId:'',
+        comicId:''
+      }
     };
   },
-  computed: {
-    
-  },
+ created(){
+    this.getlike();
+ },
   methods: {
+    shanchu(item){
+      this.historyjson.userId=this.$TestData.yonghu.id
+				this.historyjson.comicId=item.id
+      this.$Request
+				.fetch_("/user/deleteCollection", "post", this.historyjson)
+				.then((result) => {
+					console.log(result)
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
+    },
       loadMore() {
         this.loading = true
       },
       todetail:function(){
         
+      },
+      getlike(){
+        var url = "/user/selectHistoryByUserId/" + this.$TestData.yonghu.id;
+      this.$Request
+        .fetch(url)
+        .then((result) => {
+          console.log(result)
+          this.list=result.data
+          this.list.map((item) => {
+						if (item.cover) {
+							item.cover = this.$Request.domain + item.cover;
+						}
+						return item;
+					});
+        })
+        .catch((error) => {
+          this.$message.info("没有数据。");
+        });
       }
   }
 }
@@ -55,6 +91,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.shanchu{
+  margin-top: 5px;
+  margin-left: 30px;
+  font-weight: 100;
+}
 .you{
   margin-left: 20px;
 }
@@ -70,8 +111,7 @@ export default {
   color: #1d8ccc;
 }
 .fudong{
-  display: flex;
-  flex-direction: column;
+  
   text-align: left;
   margin-left: 10px;
 }
@@ -87,9 +127,7 @@ width: 300px;
 font-size: 15px;
 font-weight: 500;
 overflow: hidden;
-
 text-overflow: ellipsis;
-
 white-space: nowrap;
 }
 
@@ -98,16 +136,16 @@ white-space: nowrap;
   flex-direction: column;
 }
 .one{
-  
+  height: 100px;
   border: 1px solid rgb(202, 200, 200);
   display: flex;
   flex-direction: row;
 }
 .comicimg{
-  margin-top: 3px;
-  margin-left: 3px;
+  margin-top: 5px;
+  margin-left: 5px;
   width: 80px;
-  height: 98px;
+  height: 90px;
   border-radius: 2%;
 }
 </style>

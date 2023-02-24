@@ -2,7 +2,33 @@
 export const TOKEN_OBJECT_KEY = "TokenObject";
 export const TOKEN_KEY = "Token";
 // 站点相关信息
-
+export const yonghu = {
+    userName:'',
+    password:'',
+	avatra:'',
+	createTime:'',
+	isAdmin:'',
+	phone:'',
+	email:'',
+	id:''
+};
+export const comic = {
+    comic:{
+		id:'',
+		comicName:'',
+		cover:'',
+		description:'',
+		label:'',
+		nickName:'',
+		number:'',
+		popularity:'',
+		region:'',
+		remark:'',
+		updateTime:'',
+		year:''
+	},
+    
+};
 // SideBar 测试数据
 export const user = [
 	
