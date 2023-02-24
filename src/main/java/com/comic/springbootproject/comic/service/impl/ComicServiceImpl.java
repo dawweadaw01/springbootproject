@@ -42,15 +42,13 @@ public class ComicServiceImpl implements ComicService {
     @Override
     @Transactional
     public Result<Comic> updateComic(Comic comic) {
-        // 查询当前账簿名是否和其他重复
+
         Comic temp = comicDao.getComicByName(comic.getComicName());
         if(temp!=null && temp.getId() != comic.getId()){
             return Result.failed("动漫名称重复");
         }
         comicDao.updateComic(comic);
-        // 删除
-        comicDao.deleteComicById(comic.getId());
-        // 返回结果
+
         return Result.ok(comic);
     }
 
