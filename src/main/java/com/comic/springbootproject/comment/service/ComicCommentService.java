@@ -12,6 +12,5 @@ public interface ComicCommentService {
 
     Result<List<ComicComment>> selectCommentByComicId(int comicId);
 
-    void deleteCommentByComicCommentId(int ComicCommentId);
 
 }
