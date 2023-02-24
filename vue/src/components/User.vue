@@ -14,7 +14,25 @@
 			</el-header>
 		<div class="top">
 			<!-- 头像 -->
-			<div><img :src="url" class="img01" v-if="user.avatra==null"><img :src="user.avatra" class="img01" v-if="user.avatra!=null"></div>
+			
+
+
+
+
+			<div>
+				<el-upload
+  class="avatar-uploader"
+  :action="targetAction"
+  :show-file-list="false"
+  :on-success="handleAvatarSuccess">
+  <img v-if="user.avatar==null" :src="url" class="img01">
+  <img :src= "user.avatar" class="img01" v-if="user.avatar!=null">
+      </el-upload>
+				
+				<!-- <img :src="url" class="img01" v-if="user.avatra==null"> -->
+				
+				
+			</div>
 			<!-- 文本 -->
 			<div class="wenben">
 				<h1  class="wenben01">{{user.userName}}</h1>
@@ -24,11 +42,11 @@
 			<!-- 点赞和浏览记录 -->
 			<div class="like">
 				<p>点赞</p>
-				<p>3</p>
+				<p>{{likenum}}</p>
 			</div>
 			<div class="jilu">
 				<p>浏览记录</p>
-				<p>355</p>
+				<p>{{jilunum}}</p>
 			</div>
 		</div>
 		<div class="kuan">
@@ -63,13 +81,75 @@ export default {
 		return {
 			menus: this.$TestData.user,
 			url:"https://tse1-mm.cn.bing.net/th/id/OIP-C.l9T-NQJt5y8YF4iMTcbuSgAAAA?w=148&h=150&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-			user:this.$TestData.yonghu
+			user:this.$TestData.yonghu,
+			targetAction:'',
+			likenum:'',
+			jilunum:''
 		};
 	},
+	created(){
+		this.targetAction=this.$TestData.u+"/api/common/image/user";
+		this.getlike();
+		this.getjilu()
+	},
 	methods: {
+		getlike(){
+			var url = "/user/selectCollectionByUserId/" + this.$TestData.yonghu.id;
+      this.$Request
+        .fetch(url)
+        .then((result) => {
+          
+          this.likenum=result.data.length
+          
+        })
+        .catch((error) => {
+          
+        });
+		},
+
+		getjilu(){
+			var url = "/user/selectHistoryByUserId/" + this.$TestData.yonghu.id;
+      this.$Request
+        .fetch(url)
+        .then((result) => {
+         this.jilunum=result.data.length
+        })
+        .catch((error) => {
+          this.$message.info("没有数据。");
+        });
+		},	
 		mei: function () {
 			console.log(this.$TestData.user);
-		}
+		},
+		handleAvatarSuccess(res, file) {
+			this.url = res.data;
+			this.user.avatar=res.data
+			console.log(this.user)
+			this.$Request
+				.fetch_("/user/updateUser", "put", this.user)
+				.then((result) => {
+					if(result.code==200){
+						console.log(result)
+						this.$TestData.yonghu.userName=result.data.userName;
+                this.$TestData.yonghu.createTime=result.data.createTime;
+                this.$TestData.yonghu.email=result.data.email;
+                this.$TestData.yonghu.password=result.data.password;
+                this.$TestData.yonghu.phone=result.data.phone;
+                this.$TestData.yonghu.avatar=this.$Request.domain+result.data.avatar;
+                this.$TestData.yonghu.isAdmin=result.data.isAdmin;
+                this.$TestData.yonghu.id=result.data.id;
+						this.user=this.$TestData.yonghu
+						console.log("这是user")
+						console.log(this.user)
+					}else{
+						this.$message.info("有问题捏");
+					}
+				})
+				.catch((error) => {
+					this.$message.error(error);
+				});
+ 		
+},
 	}
 };
 </script>
@@ -82,7 +162,7 @@ export default {
 .like{
 	font-weight: 1000;
 	margin-top: 5%;
-	margin-left: 50%;
+	margin-left: 40%;
 }
 .jilu{
 	font-weight: 1000;

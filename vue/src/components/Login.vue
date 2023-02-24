@@ -98,7 +98,7 @@
                 this.$TestData.yonghu.email=result.data.email;
                 this.$TestData.yonghu.password=result.data.password;
                 this.$TestData.yonghu.phone=result.data.phone;
-                this.$TestData.yonghu.avatra=result.data.avatar;
+                this.$TestData.yonghu.avatar=this.$Request.domain+result.data.avatar;
                 this.$TestData.yonghu.isAdmin=result.data.isAdmin;
                 this.$TestData.yonghu.id=result.data.id;
                 console.log(this.$TestData.yonghu)
