@@ -140,10 +140,16 @@
   created(){
     this.getindexcomic();
     this.getcomic();
+    console.log(this.$TestData.yonghu.avatar)
   },
 		methods:{
       todetail:function(item){
-        this.$router.push({path: '/detail',query:{item}});
+        if(this.user.id!=''){
+          this.$router.push({path: '/detail',query:{item}});
+        }else{
+          this.$message.info("先登录先登录")
+        }
+        
       },
       handleCurrentChange:function(val) {
        this.get_comic.currentPage=val;
@@ -181,6 +187,7 @@
             this.$Request
 				.fetch_("/comic/getComicBySearch", "post", this.get_comic)
 				.then((result) => {
+          this.searchtext=''
 					console.log(result)
           this.comic=result;
           this.comic.list.map((item) => {
@@ -201,6 +208,7 @@
 				.fetch_("/comic/getComicBySearch", "post", this.get_comic)
 				.then((result) => {
 					console.log(result)
+          this.searchtext=''
           this.comic=result;
           this.comic.list.map((item) => {
 						if (item.cover) {

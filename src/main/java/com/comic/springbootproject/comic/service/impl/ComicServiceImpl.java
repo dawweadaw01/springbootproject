@@ -48,8 +48,6 @@ public class ComicServiceImpl implements ComicService {
             return Result.failed("动漫名称重复");
         }
         comicDao.updateComic(comic);
-        // 删除
-        comicDao.deleteComicById(comic.getId());
         // 返回结果
         return Result.ok(comic);
     }

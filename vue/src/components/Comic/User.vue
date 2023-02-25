@@ -13,7 +13,7 @@
 				@keyup.enter.native="initTableData"
 				@keyup.native="initTableData"
 			/>
-			<el-button class="button-item" type="primary" icon="el-icon-edit" @click="addModel()">新增</el-button>
+			
 		</div>
 
 		<!-- 
@@ -26,7 +26,7 @@
 		<el-table
 			ref="list"
 			:data="pageInfo.list"
-			style="width: 100%; margin-top: 10px"
+			style="width: 100%; margin-top: 0px"
 			border
 			stripe
 			highlight-current-row
@@ -40,8 +40,8 @@
 			<el-table-column property="userName" label="用户名" align="center" sortable="custom"></el-table-column>
 			<el-table-column property="userImage" label="头像" align="center" sortable="custom">
 				<template slot-scope="scope">
-					<img class="userIcon" v-if="scope.row.userImage" :src="scope.row.userImage" />
-					<img class="userIcon" v-else src="/images/default.jpg" />
+					<img class="userIcon" v-if="scope.row.avatar" :src="scope.row.avatar" />
+					<img class="userIcon" v-else src="url" />
 				</template>
 			</el-table-column>
 			<el-table-column property="password" label="密码" align="center" sortable="custom">
@@ -52,7 +52,7 @@
 			<el-table-column property="createDate" label="创建时间" width="220" align="center" sortable="custom">
 				<template slot-scope="scope">
 					<i class="el-icon-time"></i>
-					<span style="margin-left: 5px">{{ scope.row.createDate | buildDateString }}</span>
+					<span style="margin-left: 5px">{{ scope.row.createTime | buildDateString }}</span>
 				</template>
 			</el-table-column>
 			<el-table-column label="操作" width="130" align="center">
@@ -99,6 +99,7 @@ export default {
 	},
 	data() {
 		return {
+			url:"https://tse1-mm.cn.bing.net/th/id/OIP-C.l9T-NQJt5y8YF4iMTcbuSgAAAA?w=148&h=150&c=7&r=0&o=5&dpr=1.3&pid=1.7",
 			// 查询参数
 			search: {
 				currentPage: 1,
@@ -126,12 +127,13 @@ export default {
 		initTableData: function () {
 			var self = this;
 			this.$Request
-				.fetch_("/api/account/users", "post", self.search)
+				.fetch_("/user/userList", "post", self.search)
 				.then((result) => {
+					console.log(result)
 					self.pageInfo = result;
 					self.pageInfo.list.map((item) => {
-						if (item.userImage) {
-							item.userImage = this.$Request.domain + item.userImage;
+						if (item.avatar) {
+							item.avatar = this.$Request.domain + item.avatar;
 						}
 						return item;
 					});
@@ -187,7 +189,7 @@ export default {
 				type: "warning",
 			})
 				.then(() => {
-					var url = "/api/account/user/" + row.id;
+					var url = "/user/deleteUser/" + row.id;
 					this.$Request
 						.fetch_(url, "delete", {})
 						.then((result) => {
@@ -211,6 +213,7 @@ export default {
 		},
 	},
 	mounted() {
+		
 		this.initTableData();
 	},
 };
@@ -224,11 +227,12 @@ export default {
 	margin-top: 10px;
 }
 .filter-item {
-	float: right;
-	width: 200px;
+	float: left;
+	margin-left: 80%;
+	width: 150px;
 	display: inline-block;
 	vertical-align: middle;
-	margin-bottom: 10px;
+
 	/* margin-right: 5px; */
 }
 .button-item {
@@ -236,7 +240,7 @@ export default {
 	width: 100px;
 	display: inline-block;
 	vertical-align: middle;
-	margin-bottom: 10px;
+
 	margin-right: 5px;
 }
 </style>

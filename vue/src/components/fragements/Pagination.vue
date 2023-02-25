@@ -48,7 +48,8 @@ export default {
 
 <style>
 .vue-pagination {
+	width: 100%;
 	margin-top: 5px;
-	float: right;
+	float: left
 }
 </style>

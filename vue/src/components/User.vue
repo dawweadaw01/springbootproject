@@ -25,8 +25,8 @@
   :action="targetAction"
   :show-file-list="false"
   :on-success="handleAvatarSuccess">
-  <img v-if="user.avatar==null" :src="url" class="img01">
-  <img :src= "user.avatar" class="img01" v-if="user.avatar!=null">
+  <img v-if="avatar==null" :src="url" class="img01">
+  <img :src= "avatar" class="img01" v-if="avatar!=null">
       </el-upload>
 				
 				<!-- <img :src="url" class="img01" v-if="user.avatra==null"> -->
@@ -84,15 +84,32 @@ export default {
 			user:this.$TestData.yonghu,
 			targetAction:'',
 			likenum:'',
-			jilunum:''
+			jilunum:'',
+			avatar:'',
 		};
 	},
 	created(){
 		this.targetAction=this.$TestData.u+"/api/common/image/user";
 		this.getlike();
-		this.getjilu()
+		this.getjilu();
+		this.getuser();
+		// this.user.avatar=this.$TestData.yonghu.avatar
+		// 
 	},
 	methods: {
+		getuser(){
+      var url = "/user/getUserById/" + this.$TestData.yonghu.id;
+      this.$Request
+        .fetch(url)
+        .then((result) => {
+          console.log(result)
+          this.avatar=this.$Request.domain +result.avatar
+          
+        })
+        .catch((error) => {
+          this.$message.info("没有数据。");
+        });
+    },
 		getlike(){
 			var url = "/user/selectCollectionByUserId/" + this.$TestData.yonghu.id;
       this.$Request
@@ -128,25 +145,25 @@ export default {
 			this.$Request
 				.fetch_("/user/updateUser", "put", this.user)
 				.then((result) => {
-					if(result.code==200){
-						console.log(result)
+						this.avatar=this.$TestData.u+result.data.avatar
 						this.$TestData.yonghu.userName=result.data.userName;
                 this.$TestData.yonghu.createTime=result.data.createTime;
                 this.$TestData.yonghu.email=result.data.email;
                 this.$TestData.yonghu.password=result.data.password;
                 this.$TestData.yonghu.phone=result.data.phone;
-                this.$TestData.yonghu.avatar=this.$Request.domain+result.data.avatar;
+                this.$TestData.yonghu.avatar=result.data.avatar;
                 this.$TestData.yonghu.isAdmin=result.data.isAdmin;
                 this.$TestData.yonghu.id=result.data.id;
+				this.$TestData.yonghu.userName=result.data.userName;
 						this.user=this.$TestData.yonghu
+						this.$message.info("上传成功");
+						//this.user.avatar=this.$TestData.u+this.user.avatar
 						console.log("这是user")
 						console.log(this.user)
-					}else{
-						this.$message.info("有问题捏");
-					}
+					
 				})
 				.catch((error) => {
-					this.$message.error(error);
+					
 				});
  		
 },

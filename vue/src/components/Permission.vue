@@ -1,6 +1,7 @@
 <template>
+	
 	<el-container class="vue-container">
-		<el-header class="vue-header"><Header/></el-header>
+		<el-header class="vue-header"><Header/><button @click="loginout()">注销</button></el-header>
 		<el-container>
 			<el-aside
 				:style="{
@@ -48,7 +49,12 @@ export default {
 	methods: {
 		mei: function () {
 			console.log(this.$TestData.permission);
-		}
+		},
+		loginout:function() {
+			// 没有后台方法，由前端清除 token
+			this.$VuexStore.commit("setToken", "");
+			this.$router.push("/login");
+		},
 	}
 };
 </script>

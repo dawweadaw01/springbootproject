@@ -27,11 +27,26 @@
     },
     data() {
       return {
+        avatar:'',
         user:this.$TestData.yonghu,
       };
     },
     methods: {
+      getuser(){
+      var url = "/user/getUserById/" + this.$TestData.yonghu.id;
+      this.$Request
+        .fetch(url)
+        .then((result) => {
+          console.log("成功了")
+          console.log(result)
+          this.avatar=result.avatar
+        })
+        .catch((error) => {
+        });
+    },
       update(){
+        this.user.avatar=this.avatar
+        console.log(this.user)
         this.$Request
 				.fetch_("/user/updateUser", "put", this.user)
 				.then((result) => {
@@ -43,6 +58,9 @@
 					this.$message.error(error);
 				});
       }
+    },
+    created(){
+     this.getuser();
     }
   }
   </script>

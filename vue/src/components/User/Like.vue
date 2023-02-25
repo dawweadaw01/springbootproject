@@ -7,7 +7,7 @@ infinite-scroll-disabled="loading"
 infinite-scroll-distance="5" >
 <li v-for="item in list" style="list-style:none">
   <!-- 动漫展示 -->
-  <div class="one" @click="todetail">        
+  <div class="one" @click="todetail(item)">        
           <img :src="item.cover" class="comicimg">
             <div class="fudong">
               <p class="name">{{item.comicName}}</p>
@@ -65,8 +65,8 @@ export default {
       loadMore() {
         this.loading = true
       },
-      todetail:function(){
-        
+      todetail:function(item){
+          this.$router.push({path: '/detail',query:{item}});
       },
       getlike(){
         var url = "/user/selectCollectionByUserId/" + this.$TestData.yonghu.id;
@@ -138,6 +138,9 @@ white-space: nowrap;
   flex-direction: column;
 }
 .one{
+  cursor: pointer;
+    background-color: unset;
+
   height: 100px;
   border: 1px solid rgb(202, 200, 200);
   display: flex;

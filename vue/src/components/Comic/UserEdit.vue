@@ -1,4 +1,6 @@
 <template>
+
+	<!-- 用户修改 -->
 	<el-dialog title="编辑 Model" :visible.sync="dialogData.showEditDialog" width="450px" @close="cancelForm">
 		<!--
 			表单校验
@@ -31,12 +33,10 @@
 			<el-form-item label="图片">
 				<el-upload
 					:action="fileUploadInfo.action"
-					:headers="fileUploadInfo.headers"
 					list-type="picture-card"
 					:on-preview="handlePictureCardPreview"
 					:on-remove="handleRemove"
 					:on-success="handleSuccess"
-					:before-upload="beforeUpload"
 					:file-list="model.images"
 				>
 					<i class="el-icon-plus"></i>
@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { isValid } from 'ipaddr.js';
+
 
 
 export default {
@@ -102,7 +104,7 @@ export default {
 			dialogImageUrl: "",
 			dialogVisible: false,
 			fileUploadInfo: {
-				action: this.$Request.domain + "/api/common/image/profile",
+				action: this.$Request.domain + "/api/common/image/user",
 				// headers: {
 				// 	Token: this.$Storage.getItemForLs(this.$TestData.TOKEN_KEY),
 				// },
@@ -116,23 +118,13 @@ export default {
 			this.dialogImageUrl = this.$Request.domain + file.url;
 			this.dialogVisible = true;
 		},
-		beforeUpload: function (file) {
-			const isJPG = file.type === "image/jpeg";
-			const isLt4M = file.size / 1024 / 1024 < 4;
-			// if (!isJPG) {
-			// 	this.$message.error("上传头像图片只能是 JPG 格式!");
-			// }
-			if (!isLt4M) {
-				this.$message.error("上传头像图片大小不能超过 4 MB!");
-			}
-			return isLt4M;
-		},
 		handleSuccess: function (response, file, fileList) {
+			console.log(response)
 			if (response.code == 200) {
 				var image = {};
 				image.url = this.$Request.domain + response.data;
 				image.src = this.$Request.domain + response.data;
-				this.model.userImage = response.data;
+				this.model.avatar = response.data;
 				this.model.images.push(image);
 			} else {
 				this.$message.error("上传图片失败");
@@ -144,14 +136,15 @@ export default {
 		},
 		// 提交表单
 		submitForm: function () {
+			console.log(isValid)
 			// 验证表单并提交 Model
 			this.$refs["model"].validate((isValid) => {
 				if (!isValid) return;
-
 				var type = this.model.id == 0 ? "post" : "put";
 				this.$Request
-					.fetch_("/api/account/user", type, this.model)
+					.fetch_("/user/updateUser", type, this.model) //修改用户  传入user数据
 					.then((result) => {
+						this.model.avatar=''
 						if (result.code == this.$Request.OK_CODE) {
 							this.$refs["model"].resetFields();
 							this.$emit("emitDialogData", false);
@@ -160,7 +153,7 @@ export default {
 						}
 					})
 					.catch((error) => {
-						this.$message.error("提交出错。");
+						
 					});
 			});
 		},
@@ -182,7 +175,7 @@ export default {
 					this.$refs["model"].resetFields();
 				}
 			} else {
-				var url = "/api/account/user/" + this.dialogData.id;
+				var url = "/user/getUserById/" + this.dialogData.id; //根据id查user
 				this.$Request
 					.fetch(url)
 					.then((result) => {
@@ -194,7 +187,7 @@ export default {
 						console.log(this.model);
 					})
 					.catch((error) => {
-						this.$message.info("没有数据。");
+						
 					});
 			}
 		},

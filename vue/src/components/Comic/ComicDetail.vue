@@ -1,6 +1,6 @@
 <template>
     <div>
-		<router-link to="/">>>></router-link>
+		<p @click="prev()" class="ssss">>>></p>
 		<!-- 动漫展示 -->
 		<div class="zong">
 			<div class="zuo">
@@ -65,21 +65,9 @@ infinite-scroll-distance="5" >
 					<el-button @click="show3(item)" class="reply01">查看更多</el-button>
 					
 				</div>
-				 
-
-
-
-
-
-
-			  </div>
-			 
+			  </div>			 
             </div>
-             
-              
-             
-			
-        </div>
+       </div>
 		<div :style="{height:divHeight}" v-if="item.commentReplyContentList.length>0 && item.commentId==itemid && show2"></div>
 		<div class="bianjie01"></div>
       </li>
@@ -146,9 +134,14 @@ infinite-scroll-distance="5" >
 		created(){
 			this.comic=this.$route.query.item,
 			this.getcomment(),
-			this.addhistory()
+			this.addhistory(),
+			this.user.avatar=this.$TestData.u+this.user.avatar
+			console.log(this.$TestData.yonghu.avatar)
 		},
 		methods:{
+			prev(){
+				this.$router.go(-1)
+			},
 			like(){
 				this.likeuser.userId=this.user.id
 				this.likeuser.comicId=this.comic.id
@@ -241,6 +234,7 @@ infinite-scroll-distance="5" >
 						if(item.commentReplyContentList.map((a)=>{
 							if (a.replyAvatar) {
 							a.replyAvatar = this.$Request.domain + a.replyAvatar;
+							a.repliedAvatar = this.$Request.domain + a.repliedAvatar;
 						}
 						return a;
 						}))
@@ -314,6 +308,10 @@ infinite-scroll-distance="5" >
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
+  .ssss{
+	cursor: pointer;
+    background-color: unset;
+  }
   .xuan{
 	cursor: pointer;
     background-color: unset;
