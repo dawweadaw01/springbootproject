@@ -54,13 +54,13 @@ public class UserServiceImpl implements UserService {
         String time = new Date().getTime() + "";
         //初始化user属性
         user.setCreateTime(time);
-        user.setCreateTime(sdfDatetime.format(Long.parseLong(user.getCreateTime())));
         if (Objects.equals(user.getPassword(),temp2.getPassword())) {
             userDao.updateUserExpPassword(user);
         }else {
             user.setPassword(MD5Util.getMD5(user.getPassword()));
             userDao.updateUser(user);
         }
+        user.setCreateTime(sdfDatetime.format(Long.parseLong(user.getCreateTime())));
         return Result.ok(user);
     }
 
