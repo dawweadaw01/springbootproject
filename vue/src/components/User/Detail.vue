@@ -93,7 +93,10 @@
         .then((result) => {
           console.log("成功了")
           console.log(result)
-          this.avatar=this.$Request.domain +result.avatar
+          
+            this.avatar=this.$Request.domain +result.avatar
+          
+        
           
         })
         .catch((error) => {

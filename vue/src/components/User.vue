@@ -14,11 +14,6 @@
 			</el-header>
 		<div class="top">
 			<!-- 头像 -->
-			
-
-
-
-
 			<div>
 				<el-upload
   class="avatar-uploader"
@@ -102,12 +97,10 @@ export default {
       this.$Request
         .fetch(url)
         .then((result) => {
-          console.log(result)
-          this.avatar=this.$Request.domain +result.avatar
-          
+			this.avatar=this.$Request.domain +result.avatar
         })
         .catch((error) => {
-          this.$message.info("没有数据。");
+          
         });
     },
 		getlike(){
@@ -145,7 +138,12 @@ export default {
 			this.$Request
 				.fetch_("/user/updateUser", "put", this.user)
 				.then((result) => {
-						this.avatar=this.$TestData.u+result.data.avatar
+					if (result.data.avatar==null) {
+            this.avatar=null
+          				}else{
+							this.avatar=this.$TestData.u+result.data.avatar
+						}
+						
 						this.$TestData.yonghu.userName=result.data.userName;
                 this.$TestData.yonghu.createTime=result.data.createTime;
                 this.$TestData.yonghu.email=result.data.email;

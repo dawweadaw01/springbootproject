@@ -1,7 +1,7 @@
 <template>
 
 	<!-- 用户修改 -->
-	<el-dialog title="编辑 Model" :visible.sync="dialogData.showEditDialog" width="450px" @close="cancelForm">
+	<el-dialog title="编辑 Model" :visible.sync="dialogData.showEditDialog" width="400px" @close="cancelForm">
 		<!--
 			表单校验
 				el-form 标签加上 ref、:model、:rules
@@ -16,10 +16,10 @@
 			:label-width="formLabelWidth"
 		>
 			<el-form-item label="用户名" prop="userName">
-				<el-input v-model="model.userName"></el-input>
+				<el-input v-model="model.userName" class="zuo"></el-input>
 			</el-form-item>
 			<el-form-item label="密码" prop="password">
-				<el-input v-model="model.password" show-password></el-input>
+				<el-input v-model="model.password" show-password class="zuo"></el-input>
 			</el-form-item>
 			<!-- <el-form-item label="日期" prop="occurDate">
 				<el-date-picker
@@ -203,4 +203,8 @@ export default {
 	float: left;
 	margin-left: 10px;
 } */
+.zuo{
+	width: 150px;
+	float: left;
+}
 </style>

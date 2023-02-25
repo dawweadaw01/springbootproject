@@ -25,7 +25,7 @@ export default new Router({
 			path: "/detail",
 			name: "动漫详情",
 			component: () => import("@/components/Comic/ComicDetail.vue"),
-            meta: { requireAuth: false },
+            meta: { requireAuth: true },
 		},
 		{
 			// http://127.0.0.1:8080/resource
