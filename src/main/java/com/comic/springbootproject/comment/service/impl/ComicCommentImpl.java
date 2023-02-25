@@ -83,8 +83,5 @@ public class ComicCommentImpl implements ComicCommentService {
         return Result.ok("一级评论查询成功", comicCommentList);
     }
 
-    @Override
-    public void deleteCommentByComicCommentId(int ComicCommentId) {
 
-    }
 }

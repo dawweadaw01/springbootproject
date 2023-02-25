@@ -23,7 +23,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
-
+    SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
     @Transactional
     public Result<User> insertUser(User user) {
@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
         user.setCreateTime(time);
         user.setPassword(MD5Util.getMD5(user.getPassword()));
         userDao.insertUser(user);
+        user.setCreateTime(sdfDatetime.format(Long.parseLong(user.getCreateTime())));
         return Result.ok(user);
     }
 
@@ -59,6 +60,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(MD5Util.getMD5(user.getPassword()));
             userDao.updateUser(user);
         }
+        user.setCreateTime(sdfDatetime.format(Long.parseLong(user.getCreateTime())));
         return Result.ok(user);
     }
 
@@ -84,6 +86,7 @@ public class UserServiceImpl implements UserService {
     public Result<User> login(User user) {
         User temp = userDao.login(user.getUserName(), MD5Util.getMD5(user.getPassword()));
         if (temp != null) {
+            temp.setCreateTime(sdfDatetime.format(Long.parseLong(temp.getCreateTime())));
             return Result.ok(temp);
         }
         return Result.failed("用户名或密码错误");

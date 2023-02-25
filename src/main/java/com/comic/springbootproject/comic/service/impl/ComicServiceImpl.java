@@ -42,13 +42,13 @@ public class ComicServiceImpl implements ComicService {
     @Override
     @Transactional
     public Result<Comic> updateComic(Comic comic) {
-        // 查询当前账簿名是否和其他重复
+
         Comic temp = comicDao.getComicByName(comic.getComicName());
         if(temp!=null && temp.getId() != comic.getId()){
             return Result.failed("动漫名称重复");
         }
         comicDao.updateComic(comic);
-        // 返回结果
+
         return Result.ok(comic);
     }
 
@@ -63,12 +63,14 @@ public class ComicServiceImpl implements ComicService {
 
     //根据id查
     @Override
+    @Transactional
     public Comic getComicById(int id) {
         return comicDao.getComicById(id);
     }
 
     //分页查询
     @Override
+    @Transactional
     public PageInfo<Comic> getComicListBySearch(Search search) {
         // 初始化search对象
         search.initSearch();
@@ -82,6 +84,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @Transactional
     public PageInfo<Comic> getComicListByPopularity() {
         Search search = new Search();
         search.initSearch();
