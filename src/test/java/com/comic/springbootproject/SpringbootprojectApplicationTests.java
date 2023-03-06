@@ -18,6 +18,6 @@ class SpringbootprojectApplicationTests {
         String format = sdfDatetime.format(time);
         System.out.println(format);
         System.out.println(sdfDatetime.format(time));
-
+        System.out.println(MD5Util.getMD5("000812"));
     }
 }

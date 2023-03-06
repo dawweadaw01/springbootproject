@@ -9,5 +9,6 @@ import java.io.FileNotFoundException;
  * image service
  */
 public interface ImageService {
+    //上传动漫图片
     Result<String> uploadImage(MultipartFile mf, String imageTypeName) throws FileNotFoundException;
 }

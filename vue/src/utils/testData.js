@@ -1,7 +1,7 @@
 // LocalStorage keys
 export const TOKEN_OBJECT_KEY = "TokenObject";
 export const TOKEN_KEY = "Token";
-export const u="http://127.0.0.1:8081";
+export const u="http://127.0.0.1:80";
 // 站点相关信息
 export const yonghu = {
     userName:'',

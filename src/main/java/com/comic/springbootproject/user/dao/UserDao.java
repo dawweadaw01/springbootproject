@@ -36,7 +36,7 @@ public interface UserDao {
     @Select("<script>"
             + "select * from user_table"
             +"<where>"
-            +"<if test= 'keyword != \"\" and keyword != null ' >"
+            +"<if test= 'keyword != \"\" and keyword != null '>"
             + " and (userName like '%${keyword}%' or email like '%${keyword}%' or " +
             "phone like '%${keyword}%')"
             +"</if>"

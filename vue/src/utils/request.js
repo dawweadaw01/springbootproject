@@ -19,7 +19,7 @@ export const TOKEN_KEY = "Token";
 export const TOKEN_OBJECT_KEY = "TokenObject";
 
 // 定义全局变量，本机只能本地测试，生产环境不可用
-export const domain = "http://127.0.0.1:8081";
+export const domain = "http://127.0.0.1:80";
 
 // 请求拦截器
 axios.interceptors.request.use(
